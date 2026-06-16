@@ -28,7 +28,12 @@ Most AI content stops at the decision. This repo focuses on the
 activation layer that follows — where insight becomes outcomes.
 
 ---
+## Latest
 
+| Date | Vertical | Artifact |
+|---|---|---|
+| 2026-06-16 | BFS | [Decision Intelligence + Activation: The Three-Verb Architecture for BFSI](./bfs/2026-06-16_bfs_reference-architecture_di-activation-substrata.md) |
+---
 ## Index
 
 | Vertical | Focus |
