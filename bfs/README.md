@@ -8,6 +8,7 @@ Decision Intelligence + Activation patterns for banking, wealth management, paym
 
 | Date | Type | Title |
 |---|---|---|
+| 2026-06-18 | Decision record | [AML Tip-off Suppression Is Not a Filter. It Is a Model Design Constraint.](./2026-06-18_bfs_decision-record_aml-tip-off-suppression.md) |
 | 2026-06-16 | Reference architecture | [Decision Intelligence + Activation: The Three-Verb Architecture for BFSI](./2026-06-16_bfs_reference-architecture_di-activation-substrata.md) |
 
 ---
