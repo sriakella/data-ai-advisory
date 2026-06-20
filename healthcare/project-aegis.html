@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Aegis — Architecting Autonomous AI for Clinical Trial Protocols</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #090d13;
+    --surface:   #0f1520;
+    --surface2:  #161d2d;
+    --surface3:  #1c2438;
+    --border:    #1f2a3e;
+    --accent1:   #3b82f6;   /* blue — architecture */
+    --accent2:   #10b981;   /* green — validated */
+    --accent3:   #f59e0b;   /* amber — caution / gap */
+    --accent4:   #8b5cf6;   /* violet — insight */
+    --accent5:   #ef4444;   /* red — discard / risk */
+    --accent6:   #06b6d4;   /* cyan — data / knowledge */
+    --text:      #dde4f0;
+    --text-dim:  #7a8ba8;
+    --text-muted:#3d4f68;
+    --mono:      'IBM Plex Mono', monospace;
+    --sans:      'IBM Plex Sans', sans-serif;
+    --serif:     'Lora', Georgia, serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 48px 0 40px;
+    text-align: center;
+    background: linear-gradient(180deg, #0d1525 0%, var(--bg) 100%);
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent1);
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--text);
+    max-width: 780px;
+    margin: 0 auto 16px;
+    letter-spacing: -0.01em;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: var(--text-dim);
+    max-width: 600px;
+    margin: 0 auto 28px;
+    font-style: italic;
+  }
+
+  .meta-row {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+  }
+
+  .meta-row span { display: flex; align-items: center; gap: 6px; }
+  .meta-row .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); display: inline-block; }
+  .meta-row .dot.amber { background: var(--accent3); }
+
+  /* ─── PROGRESS NAV ─── */
+  .progress-rail {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .progress-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .progress-inner::-webkit-scrollbar { display: none; }
+
+  .step-pip {
+    flex-shrink: 0;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .step-pip.done {
+    border-color: var(--accent2);
+    color: var(--accent2);
+    background: rgba(16,185,129,0.06);
+  }
+
+  .step-pip.active {
+    border-color: var(--accent1);
+    color: var(--accent1);
+    background: rgba(59,130,246,0.1);
+  }
+
+  .step-pip.pending { opacity: 0.4; }
+
+  .sep { color: var(--text-muted); font-size: 10px; flex-shrink: 0; }
+
+  /* ─── MAIN LAYOUT ─── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 64px 24px 120px;
+  }
+
+  /* ─── SECTION HEADERS ─── */
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+
+  .step-badge {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 600;
+    border: 1px solid;
+  }
+
+  .step-badge.blue  { background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.3); color: var(--accent1); }
+  .step-badge.green { background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.3); color: var(--accent2); }
+  .step-badge.amber { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.3); color: var(--accent3); }
+
+  .section-title-block h2 {
+    font-family: var(--serif);
+    font-size: 1.55rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+
+  .section-title-block .section-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+  }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+
+  .card-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .card-label.blue  { color: var(--accent1); }
+  .card-label.green { color: var(--accent2); }
+  .card-label.amber { color: var(--accent3); }
+  .card-label.violet { color: var(--accent4); }
+  .card-label.red   { color: var(--accent5); }
+  .card-label.cyan  { color: var(--accent6); }
+
+  /* ─── PROSE ─── */
+  .prose {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #c8d3e6;
+  }
+
+  .prose p { margin-bottom: 14px; }
+  .prose p:last-child { margin-bottom: 0; }
+
+  .prose strong { color: var(--text); font-weight: 600; }
+
+  .prose em { font-style: italic; color: var(--text-dim); }
+
+  /* ─── TABLES ─── */
+  .table-wrap { overflow-x: auto; margin: 0; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+
+  thead tr {
+    border-bottom: 1px solid var(--border);
+  }
+
+  thead th {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 400;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid rgba(31,42,62,0.6);
+    transition: background 0.15s;
+  }
+
+  tbody tr:hover { background: rgba(255,255,255,0.02); }
+  tbody tr:last-child { border-bottom: none; }
+
+  tbody td {
+    padding: 12px 14px;
+    color: var(--text-dim);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  tbody td:first-child { color: var(--text); font-weight: 500; }
+
+  .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  .tag.green  { background: rgba(16,185,129,0.12); color: var(--accent2); border: 1px solid rgba(16,185,129,0.2); }
+  .tag.amber  { background: rgba(245,158,11,0.12); color: var(--accent3); border: 1px solid rgba(245,158,11,0.2); }
+  .tag.red    { background: rgba(239,68,68,0.12);  color: var(--accent5); border: 1px solid rgba(239,68,68,0.2);  }
+  .tag.blue   { background: rgba(59,130,246,0.12); color: var(--accent1); border: 1px solid rgba(59,130,246,0.2); }
+
+  /* ─── CALLOUT BOXES ─── */
+  .callout {
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin: 20px 0;
+    border-left: 3px solid;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .callout.blue   { background: rgba(59,130,246,0.06);  border-color: var(--accent1); color: #a5c0ef; }
+  .callout.green  { background: rgba(16,185,129,0.06);  border-color: var(--accent2); color: #86efca; }
+  .callout.amber  { background: rgba(245,158,11,0.06);  border-color: var(--accent3); color: #fcd57a; }
+  .callout.violet { background: rgba(139,92,246,0.06);  border-color: var(--accent4); color: #c4b5fd; }
+  .callout.red    { background: rgba(239,68,68,0.06);   border-color: var(--accent5); color: #fca5a5; }
+
+  .callout strong { color: inherit; font-weight: 700; }
+
+  /* ─── RETAIN / DISCARD PILLS ─── */
+  .verdict {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+
+  .verdict.retain { background: rgba(16,185,129,0.15); color: var(--accent2); border: 1px solid rgba(16,185,129,0.3); }
+  .verdict.discard { background: rgba(239,68,68,0.15); color: var(--accent5); border: 1px solid rgba(239,68,68,0.3); }
+  .verdict.partial { background: rgba(245,158,11,0.15); color: var(--accent3); border: 1px solid rgba(245,158,11,0.3); }
+
+  /* ─── DIVIDER ─── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 52px 0;
+  }
+
+  /* ─── BRIEFING BOX ─── */
+  .briefing-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent1);
+    border-radius: 10px;
+    padding: 32px 36px;
+    margin-bottom: 52px;
+  }
+
+  .briefing-box h3 {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent1);
+    margin-bottom: 18px;
+  }
+
+  .briefing-box p {
+    font-size: 15px;
+    color: #c0ccdf;
+    line-height: 1.78;
+    margin-bottom: 14px;
+  }
+
+  .briefing-box p:last-child { margin-bottom: 0; }
+
+  .briefing-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  .briefing-field { font-size: 13px; }
+  .briefing-field .field-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .briefing-field .field-value { color: var(--text); font-weight: 500; }
+
+  /* ─── STEP COMING SOON ─── */
+  .coming-soon {
+    background: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    padding: 40px;
+    text-align: center;
+    color: var(--text-muted);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 24px;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    line-height: 1.8;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 640px) {
+    .card { padding: 20px; }
+    .briefing-box { padding: 22px; }
+    h1 { font-size: 1.6rem; }
+    .section-title-block h2 { font-size: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════ HEADER ════════════════════════════════ -->
+<header>
+  <p class="eyebrow">Case Study · Enterprise AI Architecture</p>
+  <h1>Project Aegis — Autonomous AI for Clinical Trial Protocol Engineering</h1>
+  <p class="subtitle">A practitioner's working journal: designing a multi-agent system to compress 6–8 months of protocol work into 4 weeks for a Fortune 100 Life Sciences company.</p>
+  <div class="meta-row">
+    <span><span class="dot"></span>the Client · Fortune 100</span>
+    <span><span class="dot amber"></span>Live Build · In Progress</span>
+    <span>Life Sciences · Regulatory AI · Agentic Systems</span>
+  </div>
+</header>
+
+<!-- ════════════════════════════════ PROGRESS ════════════════════════════ -->
+<nav class="progress-rail" aria-label="Learning steps">
+  <div class="progress-inner">
+    <a href="#briefing" class="step-pip done">Briefing</a>
+    <span class="sep">›</span>
+    <a href="#step1" class="step-pip done">01 · Problem Decomposition</a>
+    <span class="sep">›</span>
+    <a href="#step2" class="step-pip done">02 · Agent Design</a>
+    <span class="sep">›</span>
+    <a href="#dslm" class="step-pip done" style="border-color:rgba(6,182,212,0.4);color:var(--accent6);">↗ DSLMs</a>
+    <span class="sep">›</span>
+    <a href="#step3" class="step-pip done">03 · Knowledge Architecture</a>
+    <span class="sep">›</span>
+    <a href="#step4" class="step-pip done">04 · Compliance Layer</a>
+    <span class="sep">›</span>
+    <a href="#step5" class="step-pip done">05 · Localization</a>
+    <span class="sep">›</span>
+    <a href="#step6" class="step-pip done">06 · Orchestration</a>
+    <span class="sep">›</span>
+    <a href="#step7" class="step-pip done">07 · Platform Selection</a>
+    <span class="sep">›</span>
+    <a href="#step8" class="step-pip done">08 · Roadmap</a>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════ MAIN ════════════════════════════════ -->
+<main>
+
+  <!-- BRIEFING -->
+  <section id="briefing">
+    <div class="briefing-box">
+      <h3>Steering Committee Briefing · Project Aegis</h3>
+      <p>the Client is initiating "Project Aegis" — an autonomous, multi-agent AI system to accelerate the drafting, compliance checking, and localization of Clinical Trial Protocols. The current process runs six to eight months per drug program. The mandate is to reduce this to four weeks.</p>
+      <p>The scope covers protocol generation aligned to ICH E6(R3) and regional regulatory frameworks (FDA IND, EMA CTA, country-specific annexes), automated compliance validation against applicable guidelines, and multi-jurisdiction localization across target trial geographies. Internal review orchestration and amendment management are in scope.</p>
+      <p>I've been brought in as Lead AI Solution Architect. What follows is my working journal — the reasoning behind each architectural decision, including what I got wrong first and what the correct answer actually is.</p>
+      <div class="briefing-meta">
+        <div class="briefing-field">
+          <div class="field-label">Client</div>
+          <div class="field-value">the Client</div>
+        </div>
+        <div class="briefing-field">
+          <div class="field-label">Target Reduction</div>
+          <div class="field-value">6–8 months → 4 weeks</div>
+        </div>
+        <div class="briefing-field">
+          <div class="field-label">Domain</div>
+          <div class="field-value">Clinical Trial Protocol (CTP)</div>
+        </div>
+        <div class="briefing-field">
+          <div class="field-label">System Type</div>
+          <div class="field-value">Autonomous Multi-Agent AI</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────────────── -->
+  <!-- STEP 1                                           -->
+  <!-- ──────────────────────────────────────────────── -->
+  <section id="step1">
+    <div class="section-header">
+      <div class="step-badge green">01</div>
+      <div class="section-title-block">
+        <h2>Problem Decomposition — Where Do the Six Months Actually Go?</h2>
+        <div class="section-meta">PHASE · FOUNDATION · COMPLETED</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label blue">The Starting Question</div>
+      <div class="prose">
+        <p>Before designing anything, I needed to understand the actual time distribution inside the 6–8 month window. This is not an academic exercise — get the bottleneck diagnosis wrong and you build an AI system that optimizes the wrong thing. The most dangerous scoping error in Life Sciences AI: confusing <strong>protocol manufacturing time</strong> with <strong>trial execution time</strong>.</p>
+        <p>Project Aegis is about compressing the document manufacturing pipeline — drafting, reviewing, complying, localizing — not the clinical trial itself. Patients still need to be enrolled, treated, and observed. That is biologically constrained and no AI system changes it. Any architect who conflates the two has lost the room immediately.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label amber">Common Misconception to Discard</div>
+      <div class="callout red">
+        <strong>DISCARD — "Study conduct and monitoring takes too long."</strong><br>
+        Study conduct is the clinical trial itself — the period when patients receive the investigational drug and are monitored. This phase spans years, not months, and is governed by biology, not bureaucracy. AI cannot compress patient follow-up periods. The 6–8 month figure the Client cited refers exclusively to the time required to produce a submission-ready protocol document before a single patient is enrolled. Mixing these two timelines in front of a steering committee is a credibility-ending error.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label green">Where the Time Actually Goes</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Phase</th>
+              <th>Typical Duration</th>
+              <th>Primary Bottleneck Driver</th>
+              <th>AI Compression Potential</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Scientific literature &amp; precedent mining — prior trials, comparator drugs, regulatory history for this indication</td>
+              <td>4–6 weeks</td>
+              <td>Manual PubMed/ClinicalTrials.gov searches; no structured recall</td>
+              <td><span class="tag green">✅ Very High</span></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Protocol drafting — 80–120 page document per ICH E6(R3) template, 30+ required sections</td>
+              <td>6–10 weeks</td>
+              <td>Blank-page authoring; medical writer bandwidth; version fragmentation</td>
+              <td><span class="tag green">✅ Very High</span></td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Internal review cycles — medical, legal, regulatory affairs, safety, biostatistics sign-off (4–6 serial rounds)</td>
+              <td>8–14 weeks</td>
+              <td>Sequential routing; stakeholder availability; re-drafting after each round</td>
+              <td><span class="tag green">✅ High (parallelization)</span></td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Statistical Analysis Plan alignment — endpoints, power calculations, randomization, interim analysis rules</td>
+              <td>3–5 weeks</td>
+              <td>Biostatistics dependency; consistency checks with protocol body</td>
+              <td><span class="tag amber">⚡ Medium</span></td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Regulatory submission prep — FDA IND / EMA CTA formatting, country-specific annexes, cover letters</td>
+              <td>4–6 weeks</td>
+              <td>Manual re-formatting per jurisdiction; submission template drift</td>
+              <td><span class="tag green">✅ Very High</span></td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td>IRB / Ethics Committee submission and query response — per site, sequential</td>
+              <td>4–8 weeks</td>
+              <td>External body timelines; human committees cannot be automated</td>
+              <td><span class="tag amber">⚠️ Low (human-gated)</span></td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td>Multi-jurisdiction localization — regulatory delta per country, language adaptation</td>
+              <td>3–6 weeks</td>
+              <td>No structured delta library; treated as full re-drafts rather than diffs</td>
+              <td><span class="tag green">✅ Very High</span></td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td>Amendment cycles — each protocol change restarts a subset of phases 2–6</td>
+              <td>Per occurrence</td>
+              <td>Change impact analysis is entirely manual; ripple effects missed late</td>
+              <td><span class="tag green">✅ High</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label violet">The Insight That Changes the Architecture</div>
+      <div class="prose">
+        <p>Phases 2 through 5 — drafting, internal review, SAP alignment, and submission prep — run <strong>serially</strong> today. Each phase waits for the previous to complete before starting. The cumulative wait time from handoffs alone accounts for roughly 30–40% of the total calendar duration, independent of actual work effort.</p>
+        <p>This means the AI system's primary compression lever is not writing faster — it is <strong>parallelizing review domains simultaneously</strong> while a draft is being generated. A system that produces a draft in two days and then routes it through six-week sequential reviews has not solved the problem. The orchestration pattern matters more than the generation speed.</p>
+      </div>
+      <div class="callout violet">
+        <strong>Architect's Position:</strong> "The 6–8 months is not a content problem — it is a coordination and serialization problem. An autonomous multi-agent system compresses time by running review domains in parallel against a live draft, not merely by writing faster."
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ──────────────────────────────────────────────── -->
+  <!-- STEP 2                                           -->
+  <!-- ──────────────────────────────────────────────── -->
+  <section id="step2">
+    <div class="section-header">
+      <div class="step-badge green">02</div>
+      <div class="section-title-block">
+        <h2>Agent Decomposition — Who Does What?</h2>
+        <div class="section-meta">PHASE · COMPLETED</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label blue">Pattern Decision</div>
+      <div class="prose">
+        <p>The orchestration pattern is <strong>hierarchical supervisor/worker with parallel review bands</strong>. A single Orchestrator decomposes the protocol manufacturing pipeline into phases, assigns work to domain agents, and enforces hard blocking gates at regulatory milestones. Within the review tier, all critic agents run simultaneously against the same draft — not sequentially. This is where most of the calendar compression happens.</p>
+        <p>The pattern is not a pure pipeline because drafting and review overlap: sections can enter review before the full document is assembled. It is not a swarm because unconstrained peer-to-peer agent communication in a GxP environment creates an unauditable mess. Supervisor/worker with explicit gate nodes gives you the speed of parallelism with the governance of a controlled process.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label amber">The Decision That Changes Everything</div>
+      <div class="callout violet">
+        <strong>The Protocol Ledger Agent is not optional.</strong> With 15+ agents reading and writing concurrently to a single document, you need one agent that owns the canonical version at all times. Without it, a Biostatistics Critic edit and a Regulatory Affairs Critic edit made simultaneously to the same section produce a conflict with no resolution authority. The Ledger Agent is the source of truth — every agent writes through it, never around it.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label green">Agent Topology — 18 Agents Across 6 Tiers</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Tier</th>
+              <th>Agent</th>
+              <th>Owns</th>
+              <th>Input → Output</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="tag blue">T0 · Orchestration</span></td>
+              <td>Orchestrator Agent</td>
+              <td>Task decomposition, phase sequencing, gate enforcement</td>
+              <td>Client brief → execution plan + agent assignments</td>
+            </tr>
+            <tr>
+              <td><span class="tag blue">T0 · State</span></td>
+              <td>Protocol Ledger Agent</td>
+              <td>Canonical document version, change log, conflict resolution</td>
+              <td>All agent writes → single authoritative draft</td>
+            </tr>
+            <tr>
+              <td><span class="tag green">T1 · Research</span></td>
+              <td>Literature &amp; Evidence Agent</td>
+              <td>PubMed / ClinicalTrials.gov mining + structured constraint manifest</td>
+              <td>Indication + drug → evidence package</td>
+            </tr>
+            <tr>
+              <td><span class="tag amber">T2 · Drafting</span></td>
+              <td>Section Drafter Agent <em>(configurable per section)</em></td>
+              <td>Section-by-section protocol authoring, domain-specific system prompts</td>
+              <td>Evidence package + template + section config → draft sections</td>
+            </tr>
+            <tr>
+              <td><span class="tag amber">T2 · Drafting</span></td>
+              <td>Protocol Assembly Agent</td>
+              <td>Merge sections, enforce ICH E6(R3) structure, final style pass</td>
+              <td>Draft sections → assembled protocol v1</td>
+            </tr>
+            <tr>
+              <td><span class="tag red">T3 · Review</span></td>
+              <td>Medical Critic Agent</td>
+              <td>Clinical validity, endpoint appropriateness</td>
+              <td>Protocol draft → annotated critique</td>
+            </tr>
+            <tr>
+              <td><span class="tag red">T3 · Review</span></td>
+              <td>Biostatistics Critic Agent</td>
+              <td>Power calculations, endpoint-SAP consistency</td>
+              <td>Protocol draft → stat critique + SAP draft</td>
+            </tr>
+            <tr>
+              <td><span class="tag red">T3 · Review</span></td>
+              <td>Regulatory Affairs Critic Agent</td>
+              <td>ICH / FDA / EMA compliance gap identification</td>
+              <td>Protocol draft → compliance gap list</td>
+            </tr>
+            <tr>
+              <td><span class="tag red">T3 · Review</span></td>
+              <td>Safety / PV Critic Agent</td>
+              <td>AE definitions, stopping rules, pharmacovigilance obligations</td>
+              <td>Protocol draft → safety critique</td>
+            </tr>
+            <tr>
+              <td><span class="tag red">T3 · Review</span></td>
+              <td>Legal / Privacy Critic Agent</td>
+              <td>GDPR/HIPAA data clauses, IP exposure, indemnification</td>
+              <td>Protocol draft → legal flags</td>
+            </tr>
+            <tr>
+              <td><span class="tag red">T3 · Synthesis</span></td>
+              <td>Resolution &amp; Redraft Agent</td>
+              <td>Reconcile all critic outputs, re-draft flagged sections</td>
+              <td>All critiques → protocol v2</td>
+            </tr>
+            <tr>
+              <td><span class="tag green">T4 · Submission</span></td>
+              <td>Regulatory Packaging Agent</td>
+              <td>FDA IND / EMA CTA formatting per jurisdiction</td>
+              <td>Approved protocol → submission-ready packages</td>
+            </tr>
+            <tr>
+              <td><span class="tag green">T4 · Localization</span></td>
+              <td>Country Localization Agent</td>
+              <td>Regulatory delta per jurisdiction — compliance diffs, not translations</td>
+              <td>Base protocol + country config → localized annex</td>
+            </tr>
+            <tr>
+              <td><span class="tag green">T4 · Localization</span></td>
+              <td>Translation &amp; Terminology Agent</td>
+              <td>ICH / MedDRA-consistent language adaptation</td>
+              <td>Localized content → translated, terminology-validated document</td>
+            </tr>
+            <tr>
+              <td><span class="tag green">T4 · Amendments</span></td>
+              <td>Amendment Impact Agent</td>
+              <td>Change propagation analysis, re-route affected sections</td>
+              <td>Change request → impact map + re-submission delta</td>
+            </tr>
+            <tr>
+              <td><span class="tag blue">T5 · Governance</span></td>
+              <td>Compliance Guardrail Agent</td>
+              <td>Real-time policy enforcement, hallucination blocking on every agent output</td>
+              <td>Agent output → pass / flag / reject</td>
+            </tr>
+            <tr>
+              <td><span class="tag blue">T5 · Governance</span></td>
+              <td>Human Checkpoint Gate</td>
+              <td>Hard blocking at QC, IRB prep, and final sign-off — named approver required</td>
+              <td>Milestone completion → human approval signal (blocking)</td>
+            </tr>
+            <tr>
+              <td><span class="tag blue">T5 · Governance</span></td>
+              <td>Audit &amp; Traceability Agent</td>
+              <td>21 CFR Part 11 audit trail, immutable decision provenance log</td>
+              <td>All agent actions → tamper-evident audit log</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label violet">Design Principles Behind the Topology</div>
+      <div class="prose">
+        <p><strong>One agent, one responsibility.</strong> The Protocol Design Architect role that initially seemed necessary dissolves into the Orchestrator when you're precise about what each owns. Command ambiguity between two high-level agents is a coordination failure waiting to happen.</p>
+        <p><strong>Configurable over proliferated.</strong> Four separate section drafting agents (Clinical Objectives, Population, Treatment, Safety) sounds thorough, but sections are not independent — eligibility criteria constrain safety monitoring requirements which constrain endpoints. A single Section Drafter with domain-specific configuration and shared document context keeps consistency without the synchronization overhead of four agents writing to the same document.</p>
+        <p><strong>Gate nodes are architecture, not process.</strong> The Human Checkpoint Gate is a first-class agent node, not a footnote. In a GxP environment, if human approval is not modeled as a blocking dependency in the workflow graph, it gets bypassed under schedule pressure. Making it explicit in the topology makes it auditable and enforceable.</p>
+      </div>
+      <div class="callout violet">
+        <strong>Steering committee framing:</strong> "We are not building a chatbot that writes protocols. We are building a document manufacturing system with parallel quality control bands, an authoritative state layer, and hard human gates at regulatory milestones. The orchestrator sequences; the critics run simultaneously; the ledger holds truth; humans approve at defined checkpoints. Nothing clears a gate without a named human sign-off."
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ──────────────────────────────────────────────── -->
+  <!-- INTERLUDE: DSLMs                                 -->
+  <!-- ──────────────────────────────────────────────── -->
+  <section id="dslm">
+    <div class="section-header">
+      <div class="step-badge" style="background:rgba(6,182,212,0.1);border-color:rgba(6,182,212,0.3);color:var(--accent6);font-size:13px;">↗</div>
+      <div class="section-title-block">
+        <h2>Why Domain-Specific Language Models Matter for This Architecture</h2>
+        <div class="section-meta">SIDEBAR · MODEL SELECTION · GARTNER INSIGHT</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label cyan">The Model Layer Decision</div>
+      <div class="prose">
+        <p>Selecting the right model tier for each agent class is not a procurement footnote — it directly determines accuracy, cost, and regulatory defensibility at scale. Gartner's emerging research on <strong>Domain-Specific Language Models (DSLMs)</strong> is directly applicable to the agent topology designed in Step 2.</p>
+        <p>DSLMs are generative AI models trained and fine-tuned on specialized corpora for a specific domain — regulatory, biomedical, legal, cybersecurity. Unlike general-purpose frontier models trained on broad web data, DSLMs internalize domain vocabulary, regulatory nuances, and workflow context at a structural level. Crucially, they tend to be <strong>smaller</strong> (commonly 7B–13B parameters), <strong>cheaper to operate</strong>, and measurably <strong>more accurate</strong> on domain-specific tasks than large general models that guess at specialized terminology.</p>
+        <p>For Project Aegis, with 18 agents running across potentially thousands of protocol generation cycles, the cost and accuracy argument is not academic. A 7B regulatory DSLM running inference on a Critic Agent cohort costs a fraction of GPT-4-class API calls and produces fewer domain errors — which in a GxP context translates directly to fewer compliance failures.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label cyan">DSLM Applicability Across the 18-Agent Topology</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>DSLM Advantage</th>
+              <th>Why It Matters</th>
+              <th>Agents That Benefit Directly</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Higher accuracy in domain language</strong></td>
+              <td>Regulatory critics must produce precise ICH/FDA/EMA citations and MedDRA-coded adverse event language. General models approximate; DSLMs are trained on the source material.</td>
+              <td>Regulatory Affairs Critic, Medical Critic, Safety/PV Critic, Translation &amp; Terminology Agent</td>
+            </tr>
+            <tr>
+              <td><strong>Lower hallucination rate on domain facts</strong></td>
+              <td>A fabricated stopping rule or misquoted guideline section is a patient safety event. DSLMs hallucinate less on in-domain content because the training distribution matches the task.</td>
+              <td>Compliance Guardrail Agent, Protocol Ledger Agent, Section Drafter Agent</td>
+            </tr>
+            <tr>
+              <td><strong>Deterministic, explainable outputs</strong></td>
+              <td>GxP validation (21 CFR Part 11) requires that outputs be traceable to a documented knowledge source. DSLMs produce more consistent, less stochastic outputs on in-domain tasks.</td>
+              <td>Audit &amp; Traceability Agent, Human Checkpoint Gate, Regulatory Packaging Agent</td>
+            </tr>
+            <tr>
+              <td><strong>Lower inference cost at scale</strong></td>
+              <td>18 agents × thousands of protocol runs = millions of inference calls per year. A 7B DSLM running on dedicated compute is 10–20× cheaper than frontier API calls at this volume.</td>
+              <td>All agents — cost efficiency is system-wide</td>
+            </tr>
+            <tr>
+              <td><strong>Domain-trained reasoning patterns</strong></td>
+              <td>Statistical reasoning (power calculations, endpoint hierarchies), biomedical evidence synthesis, and regulatory delta analysis require reasoning patterns that emerge from domain training, not general web corpus exposure.</td>
+              <td>Biostatistics Critic, Literature &amp; Evidence Agent, Country Localization Agent, Statistical Design &amp; SAP Agent</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label violet">Recommended Model Assignment</div>
+      <div class="prose">
+        <p><strong>Biomedical/Regulatory DSLM</strong> — base model for all drafting, evidence, and statistics agents. Trained on PubMed, ClinicalTrials.gov, FDA guidances, and ICH documents. Handles generation tasks where domain fluency and evidence synthesis are primary requirements.</p>
+        <p><strong>Regulatory Compliance DSLM</strong> — assigned to all Critic agents and the Compliance Guardrail. Fine-tuned specifically on regulatory decision corpora: agency rejection letters, approval reviews, EMA assessment reports, and compliance audit findings. This model needs to reason about what is wrong in a document, not just what is right.</p>
+        <p>DSLMs are not a replacement for retrieval. The knowledge architecture from Step 3 — segmented RAG indices, the regulatory knowledge graph, and the citation ledger — remains the authoritative runtime knowledge layer. The DSLM provides the reasoning backbone; retrieval provides the current, citable facts.</p>
+      </div>
+      <div class="callout cyan">
+        Source: Gartner research on domain-specific language models and their enterprise AI applications —
+        <a href="https://www.gartner.com/en/articles/domain-specific-language-models" target="_blank" rel="noopener" style="color:var(--accent6);">gartner.com/en/articles/domain-specific-language-models</a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ──────────────────────────────────────────────── -->
+  <!-- STEP 3                                           -->
+  <!-- ──────────────────────────────────────────────── -->
+  <section id="step3">
+    <div class="section-header">
+      <div class="step-badge green">03</div>
+      <div class="section-title-block">
+        <h2>Knowledge Architecture — What Does the System Need to Know?</h2>
+        <div class="section-meta">PHASE · COMPLETED</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label blue">The Core Question</div>
+      <div class="prose">
+        <p>Eighteen agents operating in a GxP-regulated environment need knowledge that is current, attributable, and structurally accurate. RAG gets you most of the way — but three things a vector store alone cannot give you are what separate a defensible protocol from a hallucinated one: a knowledge graph for regulatory dependency traversal, a citation ledger for version-pinned provenance, and a grounding enforcer that treats unattributed claims as compliance violations.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label green">Knowledge Domains — Six Segmented Indices</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Index</th><th>Contents</th><th>Update Cadence</th><th>Primary Consumers</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>Regulatory Index</td><td>ICH E6(R3), FDA guidances, EMA reflection papers, country-specific submission rules</td><td>Monitored continuously; re-ingested on new guidance publication</td><td>Regulatory Affairs Critic, Compliance Guardrail, Packaging Agent</td></tr>
+            <tr><td>2</td><td>Evidence Index</td><td>PubMed, ClinicalTrials.gov, meta-analyses, regulatory history (approvals / denials), RWE datasets</td><td>Weekly automated sync</td><td>Literature &amp; Evidence Agent, Section Drafter, Medical Critic</td></tr>
+            <tr><td>3</td><td>Internal SOP Index</td><td>the Client SOPs, historical approved protocols, IB templates, ICF templates, safety databases — approved exemplars only</td><td>On SOP revision (version-gated)</td><td>Section Drafter, Protocol Assembly, Legal Critic</td></tr>
+            <tr><td>4</td><td>Statistical Index</td><td>SAP templates, power calculation references, endpoint hierarchy conventions, randomization schemes</td><td>Quarterly or on methodology update</td><td>Biostatistics Critic, Statistical Design &amp; SAP Agent</td></tr>
+            <tr><td>5</td><td>Terminology Index</td><td>MedDRA, WHO-DD, ICD codes, endpoint controlled vocabularies</td><td>Per MedDRA release cycle (biannual)</td><td>Translation Agent, Safety/PV Critic, Section Drafter</td></tr>
+            <tr><td>6</td><td>Localization Index</td><td>Country regulatory delta database, local SOC norms, ethics committee requirements, translation glossaries</td><td>Per country; monitored per jurisdiction regulator</td><td>Country Localization Agent, Translation Agent</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout red" style="margin-top:16px;">
+        <strong>Internal SOP Index — critical constraint:</strong> rejected, withdrawn, or superseded protocols must be excluded or tagged with failure reason annotations and never ingested as positive exemplars. A poisoned internal corpus produces systematically wrong protocols at scale — with full model confidence.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label amber">Parametric vs. Retrieval Knowledge</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Type</th><th>Definition</th><th>Examples in Aegis</th><th>Trustworthy for Compliance?</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Parametric</strong></td><td>Baked into model weights; static after training</td><td>ICH E6(R3) structural logic, GCP principles, statistical reasoning patterns, medical writing conventions</td><td><span class="tag red">No — frozen, unattributable</span></td></tr>
+            <tr><td><strong>Retrieval</strong></td><td>Fetched at runtime from versioned external sources</td><td>FDA guidance published last month, the Client SOP v4.2, Compound X 2024 trial data, Brazil 2025 regulatory delta</td><td><span class="tag green">Yes — current, citable, auditable</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="prose" style="margin-top:16px;">
+        <p>Retrieval knowledge dominates for compliance purposes. Every factual claim in the protocol must cite a specific source, section, and version — parametric knowledge cannot satisfy this requirement. The model's backbone provides reasoning capability and structural understanding; runtime retrieval provides the authoritative, datestamped facts that go into the document.</p>
+        <p>Use a <strong>domain-fine-tuned model</strong> (biomedical + regulatory LLM) as the parametric backbone. Never rely on it for current regulatory rules, internal SOPs, or compound-specific data. Always retrieve those at runtime.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label violet">Three Things RAG Alone Cannot Do</div>
+      <div class="prose">
+        <p><strong>1. Regulatory dependency traversal.</strong> ICH E6(R3) §5.1.1 depends on §4.3 which is referenced by FDA guidance §2.1. A flat vector store chunks these into isolated semantic units and loses the cross-reference. When the Regulatory Affairs Critic asks whether a safety monitoring section is compliant, it needs to know that §8 (essential documents) structurally constrains §5 (sponsor responsibilities). A <strong>Regulatory Knowledge Graph</strong> (Neo4j or equivalent) layered over the vector indices handles this — nodes are sections and guidances, edges are cross-references, supersession chains, and temporal versioning. Vector search handles "what's relevant"; the graph handles "what depends on what."</p>
+        <p><strong>2. Regulatory versioning as change-impact, not re-indexing.</strong> When FDA issues a new guidance, the instinct is to re-index. The harder problem: which already-generated protocol sections were cited against the old version? A <strong>Citation Ledger</strong> — an append-only store where every agent claim carries a pointer to the specific document version it was grounded in — enables the system to flag all sections citing version N when version N+1 is ingested. This is the Amendment Impact Agent's function extended into the knowledge layer.</p>
+        <p><strong>3. Grounding enforcement.</strong> Agent outputs that cannot be attributed to a retrieved source chunk must be blocked, not just flagged. The Compliance Guardrail Agent maintains a citation manifest against which every agent assertion is validated. Unattributed claims in a GxP environment are not a quality issue — they are a compliance violation.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label cyan">Full Knowledge Architecture Stack</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Layer</th><th>Component</th><th>Technology</th><th>Purpose</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="tag blue">L1 · Storage</span></td><td>6 Segmented Vector Indices</td><td>pgvector / Pinecone / Weaviate</td><td>Dense semantic retrieval per domain</td></tr>
+            <tr><td><span class="tag blue">L1 · Storage</span></td><td>Regulatory Knowledge Graph</td><td>Neo4j / Amazon Neptune</td><td>Cross-reference, hierarchy, dependency traversal</td></tr>
+            <tr><td><span class="tag blue">L1 · Storage</span></td><td>Citation Ledger</td><td>Append-only structured store</td><td>Version-pinned attribution for every agent claim</td></tr>
+            <tr><td><span class="tag green">L2 · Retrieval</span></td><td>Hybrid Retrieval</td><td>Dense embedding + BM25 sparse</td><td>Dense finds semantically similar; BM25 catches exact regulatory terms</td></tr>
+            <tr><td><span class="tag green">L2 · Retrieval</span></td><td>Cross-Encoder Reranker</td><td>Domain-tuned reranker model</td><td>Re-scores top-k candidates before context injection</td></tr>
+            <tr><td><span class="tag green">L2 · Retrieval</span></td><td>Hierarchical Chunking</td><td>Section → paragraph + parent context</td><td>Preserves regulatory section relationships; no orphaned chunks</td></tr>
+            <tr><td><span class="tag amber">L3 · Routing</span></td><td>Orchestrator Index Router</td><td>Rules + LLM classification</td><td>Matches agent task to relevant index subset</td></tr>
+            <tr><td><span class="tag red">L4 · Governance</span></td><td>Grounding Enforcer</td><td>Citation manifest validator</td><td>Blocks unattributed agent assertions</td></tr>
+            <tr><td><span class="tag red">L4 · Governance</span></td><td>Version Change Detector</td><td>Diff monitor + impact mapper</td><td>On new guidance ingestion, flags all draft sections citing prior version</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ──────────────────────────────────────────────── -->
+  <!-- STEP 4                                           -->
+  <!-- ──────────────────────────────────────────────── -->
+  <section id="step4">
+    <div class="section-header">
+      <div class="step-badge green">04</div>
+      <div class="section-title-block">
+        <h2>Compliance &amp; Hallucination Guard — How Do We Not Kill Anyone?</h2>
+        <div class="section-meta">PHASE · COMPLETED</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label red">Beyond Hallucination — Regulatory Failure Modes</div>
+      <div class="prose">
+        <p>Hallucination is content fabrication. The more dangerous failure modes in this system are structural integrity breaches — errors the model generates fluently and confidently, grounded in plausible-sounding regulatory logic, that pass surface-level review and fail only when an FDA reviewer traces a citation to a section that does not exist or a statistical method that inverts the stated hypothesis.</p>
+      </div>
+      <div class="table-wrap" style="margin-top:16px;">
+        <table>
+          <thead>
+            <tr><th>Failure Mode</th><th>Description</th><th>Patient Safety Impact</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Regulatory citation fabrication</strong></td><td>Inventing non-existent guidance sections (e.g., "FDA 21 CFR 312.94 requires X")</td><td>Protocol cites fake rules; submission rejected; trial delayed by months</td></tr>
+            <tr><td><strong>Cross-reference collapse</strong></td><td>Misaligning hierarchical ICH sections (linking §5.1 to §4.2 instead of §4.3)</td><td>Safety monitoring requirements silently missing; patient harm not caught</td></tr>
+            <tr><td><strong>Terminology drift</strong></td><td>Incorrect MedDRA coding (mapping "cardiac arrest" to wrong hierarchy level)</td><td>Adverse event reporting non-compliant; regulatory audit failure</td></tr>
+            <tr><td><strong>Statistical method inversion</strong></td><td>Flipping one-sided vs. two-sided tests, power vs. alpha, or conflating endpoint hierarchy</td><td>Trial underpowered; patient exposure without scientific justification</td></tr>
+            <tr><td><strong>Temporal versioning error</strong></td><td>Citing ICH E6(R2) instead of E6(R3), or superseded FDA guidance</td><td>Entire protocol invalidated; full re-draft required</td></tr>
+            <tr><td><strong>SOP-contamination</strong></td><td>Drawing from a rejected historical protocol not tagged as a failure exemplar</td><td>Systematically reproducing known errors at scale across all drug programs</td></tr>
+            <tr><td><strong>Miscalibrated confidence</strong></td><td>Generating fluently wrong content on out-of-distribution regulatory text (new guidance, rare jurisdiction) with high apparent certainty</td><td>Error passes review because the model doesn't surface its own uncertainty</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label amber">Guardrail Placement — Both Layers Required</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Guard</th><th>Placement</th><th>Mechanism</th><th>GxP Justification</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Citation Grounding Enforcer</strong></td><td><span class="tag blue">Inline</span> — retrieval layer</td><td>Constrained decoding / structured output schema; blocks unattributed token generation during inference</td><td>Unattributed claims = compliance violation before a word is written</td></tr>
+            <tr><td><strong>Confidence Threshold Filter</strong></td><td><span class="tag blue">Inline</span> — post-retrieval</td><td>Low reranker scores and sparse retrieval hits flag section for heightened review before generation</td><td>Miscalibration is a patient safety risk; system must surface its own uncertainty</td></tr>
+            <tr><td><strong>Compliance Guardrail Agent</strong></td><td><span class="tag amber">Both</span></td><td>Inline: validates prompt constraints. Post-generation: validates output against regulatory knowledge graph and citation ledger</td><td>Inline prevents waste; post-generation catches structural drift that emerges only in full context</td></tr>
+            <tr><td><strong>Regulatory Knowledge Graph Validator</strong></td><td><span class="tag green">Post-generation</span></td><td>Traverses cross-reference and hierarchy dependencies after section is drafted</td><td>Structural relationships cannot be validated before the full section exists</td></tr>
+            <tr><td><strong>Citation Ledger Auditor</strong></td><td><span class="tag green">Post-generation, continuous</span></td><td>Version-pinned provenance log per claim; detects stale citations on guidance update</td><td>Provides the auditable evidence trail required for FDA inspection</td></tr>
+            <tr><td><strong>Human Compliance Gate</strong></td><td><span class="tag green">Post-generation, blocking</span></td><td>21 CFR Part 11 e-signature required; validates citations, statistics, safety adequacy</td><td>AI cannot approve GxP records. Period.</td></tr>
+            <tr><td><strong>Human Scientific Gate</strong></td><td><span class="tag green">Post-generation, blocking</span></td><td>Qualified clinical expert applies independent judgment on protocol design validity</td><td>Compliance accuracy ≠ scientific appropriateness; these are separate gates</td></tr>
+            <tr><td><strong>Exception Record Trigger</strong></td><td><span class="tag green">Post-human-arbitration</span></td><td>Human override of a contested resolution opens an exception record in the audit log</td><td>Human authority is auditable, not terminal. FDA inspectors review human decisions too.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout amber" style="margin-top:16px;">
+        <strong>Why inline-only is insufficient in GxP:</strong> LLMs can drift during multi-turn generation even when the initial prompt was valid. A section that passes inline grounding at turn 1 may introduce a non-compliant cross-reference by turn 4 as context accumulates. Post-generation validation is not optional — it is the safety net for everything the inline layer cannot see.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label violet">What the Human Actually Validates</div>
+      <div class="prose">
+        <p>The human checkpoint in GxP is a <strong>signatory obligation</strong> under 21 CFR Part 11, not a quality preference. The human is the accountable entity in any FDA audit. This means the checkpoint has two distinct and non-interchangeable gates:</p>
+      </div>
+      <div class="table-wrap" style="margin-top:14px;">
+        <table>
+          <thead>
+            <tr><th>Gate Type</th><th>What the Human Validates</th><th>Why AI Cannot Do This</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Compliance Gate</strong></td><td>Citation versions are current; statistical method is correctly applied; safety monitoring rules match compound risk profile; cross-document consistency with IB and ICF; amendment impact is complete</td><td>Agent cannot self-validate regulatory accuracy; human is the accountable signatory</td></tr>
+            <tr><td><strong>Scientific Gate</strong></td><td>Is this the right endpoint for this patient population? Is the risk-benefit profile of the stopping rules appropriate for this compound at this stage? Does the protocol design reflect sound clinical judgment — not just technically correct execution of a template?</td><td>Scientific/clinical judgment is not a validation task — it requires a qualified expert applying independent reasoning that no compliance check can substitute</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label red">Resolving Contradictory Critic Conclusions</div>
+      <div class="prose">
+        <p><strong>Scenario:</strong> Biostatistics Critic clears the sample size and endpoint alignment. Regulatory Affairs Critic flags the same section for violating FDA guidance §2.1 on endpoint definitions.</p>
+      </div>
+      <div class="table-wrap" style="margin-top:14px;">
+        <table>
+          <thead>
+            <tr><th>Step</th><th>Agent</th><th>Action</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1. Detection</td><td>Orchestrator Agent</td><td>Conflict detected in critic outputs; section blocked from proceeding</td></tr>
+            <tr><td>2. Grounding</td><td>Citation Ledger</td><td>Retrieves version-pinned citations for both claims — exactly which guidance section each critic cited</td></tr>
+            <tr><td>3. Graph Validation</td><td>Regulatory Knowledge Graph Validator</td><td>Traverses graph to determine if the cited guidance section actually constrains the endpoint definition in question</td></tr>
+            <tr><td>4. Reconciliation</td><td>Resolution &amp; Redraft Agent</td><td>Proposes specific changes that satisfy both critiques — cannot override either without human approval</td></tr>
+            <tr><td>5. Human Arbitration</td><td>Human Checkpoint Gate</td><td>Human decides which critique is valid, or if both are valid and a compromise is required. Reviews citation ledger before signing.</td></tr>
+            <tr><td>6. Exception Record</td><td>Audit &amp; Traceability Agent</td><td>Human arbitration opens an exception record — conflict, grounding evidence, and human decision logged for FDA inspection</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout red" style="margin-top:16px;">
+        <strong>No agent overrides another critic.</strong> AI proposes. Human decides. The audit trail does not close on human approval — it records the human decision as an exception that is itself subject to inspection. In GxP, the audit trail is not evidence that the process worked. It <em>is</em> the process.
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ──────────────────────────────────────────────── -->
+  <!-- STEP 5                                           -->
+  <!-- ──────────────────────────────────────────────── -->
+  <section id="step5">
+    <div class="section-header">
+      <div class="step-badge green">05</div>
+      <div class="section-title-block">
+        <h2>Localization Architecture — Multi-Jurisdiction, Multi-Language</h2>
+        <div class="section-meta">PHASE · COMPLETED</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label blue">The Core Distinction That Changes Everything</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Dimension</th><th>Regulatory Localization</th><th>Linguistic Localization</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>What changes</strong></td><td>Protocol content, structure, and requirements per jurisdiction</td><td>Language and expression while preserving meaning</td></tr>
+            <tr><td><strong>Why it changes</strong></td><td>Jurisdictional regulatory deltas — FDA, EMA, and PMDA have structurally different rules</td><td>Local language and cultural adaptation for sites, patients, and ethics committees</td></tr>
+            <tr><td><strong>Who decides</strong></td><td>Regulatory Affairs expert + country regulatory team — a domain judgment call</td><td>Translators + Terminology managers — a linguistic fidelity call</td></tr>
+            <tr><td><strong>Failure mode</strong></td><td>Protocol rejected by Health Authority; trial cannot start; patient safety compromised</td><td>Miscommunication with patients or sites; ethics committee rejection on consent language</td></tr>
+            <tr><td><strong>Amendment trigger</strong></td><td>Regulatory guidance update in any jurisdiction</td><td>Approved translation change, new MedDRA term mapping, or glossary update</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout amber" style="margin-top:16px;">
+        <strong>Why conflating them fails:</strong> "Include informed consent in local language" is a <em>regulatory</em> requirement, not a translation task. If you treat it as translation, the protocol misses the requirement itself — not just the language. Amendment propagation also breaks: a global protocol change triggers regulatory re-localization for specific sections; it should not trigger full re-translation of unaffected content. Conflation produces unnecessary re-work and missed regulatory obligations simultaneously.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label green">Localization Is Three Problems, Not One</div>
+      <div class="prose">
+        <p>The architecture must handle three distinct localization types, each with its own agent, knowledge source, and validation path:</p>
+        <p><strong>Regulatory localization</strong> — changes <em>what</em> is in the protocol per jurisdiction. Governed by the delta database and handled by the Country Localization Agent. Requires regulatory expert review and human approval gate.</p>
+        <p><strong>Linguistic localization</strong> — changes <em>how</em> content is expressed. Governed by Translation Memory, locale-specific MedDRA LLT mappings, and approved terminology glossaries. Requires back-translation validation on safety-critical sections (dosing, stopping rules, consent language). A single forward-translation pass is not sufficient for patient-facing or safety-critical text.</p>
+        <p><strong>Format localization</strong> — changes the document package <em>structure</em> itself. FDA requires an IND (Investigational New Drug Application); EMA requires a CTA (Clinical Trial Authorization). These are structurally different submission packages — different cover pages, module structures, appendix requirements, and labelling formats. This is not a content delta; it is a template difference that the Regulatory Packaging Agent handles via jurisdiction-specific output schemas.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label cyan">Delta Database Schema</div>
+      <div class="prose">
+        <p>The delta database is the knowledge source for the Country Localization Agent. It is a rule-based catalog — not flat text — structured as a graph to support cross-reference with the ICH section hierarchy.</p>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:20px 24px;margin-top:14px;font-family:var(--mono);font-size:12.5px;line-height:1.7;color:#a8b8d0;">
+Delta Record<br>
+├── jurisdiction &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (FDA | EMA | PMDA | ANVISA | CDSCO | ...)<br>
+├── regulatory_domain &nbsp;&nbsp;&nbsp; (Safety Monitoring | Consent | DSMB | Endpoints | ...)<br>
+├── delta_type &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (ADD | REMOVE | MODIFY | REPLACE | FORMAT)<br>
+├── reference_section &nbsp;&nbsp;&nbsp; (ICH E6(R3) §5.10.2)<br>
+├── delta_rule &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (machine-readable constraint)<br>
+├── source_guidance &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (citation + version + effective_date)<br>
+├── delta_version &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (version of this delta record itself)<br>
+├── delta_status &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (ACTIVE | SUPERSEDED | PROPOSED)<br>
+├── impact_scope &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (which global sections are affected)<br>
+├── section_mapping &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (global_section → local_section map per variant)<br>
+├── conflict_registry_ref (pointer to cross-jurisdiction incompatibilities)<br>
+├── approval_status &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (approved by country regulatory team)<br>
+└── reviewer &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (named human approver)
+      </div>
+      <div class="callout red" style="margin-top:16px;">
+        <strong>Conflict Registry:</strong> The delta database must pre-compute cross-jurisdiction incompatibilities. EMA may require a DSMB independence clause that PMDA prohibits for domestic trials. Without a Conflict Registry, the Country Localization Agent produces individually valid country variants that cannot be reconciled into a coherent multi-regional package — discovered only at submission stage.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label amber">Three Key FDA vs. EMA Jurisdictional Differences</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Difference</th><th>FDA</th><th>EMA</th><th>Delta Type</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>DSMB Charter</strong></td>
+              <td>DSMB required for Phase III; charter not mandatory for all trial types</td>
+              <td>DSMB charter mandatory for all Phase III trials; must include independent statistician role</td>
+              <td><span class="tag green">ADD</span> — EMA variant requires a DSMB charter section with defined independent statistician role</td>
+            </tr>
+            <tr>
+              <td><strong>Informed Consent Timing</strong></td>
+              <td>Consent before randomization; electronic consent permitted</td>
+              <td>Consent before <em>any</em> trial procedure; electronic consent requires additional per-country validation</td>
+              <td><span class="tag amber">MODIFY</span> — EMA variant requires explicit "no procedure before consent" statement plus country-specific e-consent validation section</td>
+            </tr>
+            <tr>
+              <td><strong>Surrogate Endpoint Validation</strong></td>
+              <td>Surrogate primary endpoint permitted with clinical justification</td>
+              <td>Surrogate endpoint must be validated per EMA reflection paper; clinical endpoint preferred unless surrogate is formally established</td>
+              <td><span class="tag amber">MODIFY</span> — EMA variant requires additional validation section; FDA does not</td>
+            </tr>
+            <tr>
+              <td><strong>Submission Package Structure</strong></td>
+              <td>IND (Investigational New Drug Application) — eCTD format, US-specific module structure</td>
+              <td>CTA (Clinical Trial Authorization) — different module structure, cover document, and labelling format</td>
+              <td><span class="tag blue">FORMAT</span> — not a content delta; the Regulatory Packaging Agent uses an entirely different output schema per jurisdiction</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label violet">Amendment Propagation Across Country Variants</div>
+      <div class="prose">
+        <p>When a global protocol amendment is issued, the architecture propagates changes to country variants without triggering full re-localization. The Citation Ledger's version-pinned provenance is what makes targeted propagation possible — every section knows exactly which guidance version it was built against.</p>
+      </div>
+      <div class="table-wrap" style="margin-top:14px;">
+        <table>
+          <thead>
+            <tr><th>Step</th><th>Agent</th><th>Action</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1. Detection</td><td>Amendment Impact Agent</td><td>Identifies which ICH sections are affected by the global amendment</td></tr>
+            <tr><td>2. Delta Lookup</td><td>Country Localization Agent</td><td>Queries delta database: "All country deltas referencing affected ICH sections"</td></tr>
+            <tr><td>3. Citation Check</td><td>Citation Ledger</td><td>Retrieves all country variant sections citing the superseded guidance version</td></tr>
+            <tr><td>4. Impact Mapping</td><td>Amendment Impact Agent</td><td>Maps affected global sections to their local section equivalents using section_mapping field</td></tr>
+            <tr><td>5. Targeted Re-localization</td><td>Country Localization Agent</td><td>Re-localizes only affected sections per country — not the full document</td></tr>
+            <tr><td>6. Validation</td><td>Regulatory Critic + Human Gate</td><td>Country-specific human approver validates updated sections against new guidance</td></tr>
+            <tr><td>7. Audit</td><td>Audit &amp; Traceability Agent</td><td>Logs propagation path, updated sections, old and new guidance versions, approver identity</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout violet" style="margin-top:16px;">
+        <strong>Mid-trial jurisdiction updates:</strong> When a Health Authority (not the sponsor) updates its own guidance mid-trial, the delta records themselves become stale. Delta records carry their own version and status fields (ACTIVE | SUPERSEDED | PROPOSED). A guidance monitor detects HA updates, marks affected delta records as SUPERSEDED, proposes updated rules for regulatory review, and flags all country variants derived from the old delta for re-assessment — independently of any global protocol change.
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ──────────────────────────────────────────────── -->
+  <!-- STEP 6                                           -->
+  <!-- ──────────────────────────────────────────────── -->
+  <section id="step6">
+    <div class="section-header">
+      <div class="step-badge green">06</div>
+      <div class="section-title-block">
+        <h2>Orchestration Pattern — Supervisor/Worker with Embedded Mini-Pipelines</h2>
+        <div class="section-meta">PHASE · COMPLETED</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label blue">Pattern Definitions — The Decisive Variable</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Pattern</th><th>Definition</th><th>Who Controls Task Decomposition?</th><th>Verdict for Aegis</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Pipeline</strong></td>
+              <td>Tasks flow through a fixed, linear sequence — each stage depends on the previous stage's output</td>
+              <td>Predefined sequence — no dynamic routing</td>
+              <td><span class="tag red">REJECTED</span></td>
+            </tr>
+            <tr>
+              <td><strong>Swarm</strong></td>
+              <td>Agents operate as peers, autonomously deciding when to call other agents based on local reasoning</td>
+              <td>Each agent — fully decentralized</td>
+              <td><span class="tag red">REJECTED</span></td>
+            </tr>
+            <tr>
+              <td><strong>Supervisor/Worker</strong></td>
+              <td>Central Orchestrator decomposes work into tasks, dispatches to specialized workers in parallel bands, and reconciles outputs</td>
+              <td>Orchestrator — centralized with parallel execution</td>
+              <td><span class="tag green">SELECTED</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label red">Why Pipeline Fails</div>
+      <div class="prose">
+        <p>Pipeline enforces serial execution by design. Applied to Aegis, this means: Medical Critic completes → Biostatistics Critic starts → Regulatory Affairs Critic starts → Safety Critic starts → Legal Critic starts. Total review time equals the sum of all critic durations — potentially 10+ hours — instead of parallel execution at the duration of the slowest critic — approximately 2 hours.</p>
+        <p>Step 1 established that phases 2–5 running serially is the primary bottleneck producing the 6–8 month timeline. The single highest-value architectural decision in the entire system is the parallel critic layer. Pipeline structurally eliminates that parallelism. It is not a suboptimal choice — it is a direct inversion of the value proposition.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label red">Why Swarm Fails</div>
+      <div class="prose">
+        <p>Swarm produces three specific failure modes that are incompatible with GxP operation: agents self-routing without central record (no auditable task decomposition); circular calls creating infinite loops with no coordinator to detect and break them; and concurrent writes to the Protocol Ledger without coordination, producing version corruption.</p>
+        <p>The deeper issue is validation. 21 CFR Part 11 requires a documented, reproducible execution path. A swarm's execution paths are emergent — they depend on each agent's local reasoning at runtime and cannot be predefined or validated as a stable process. FDA inspection readiness requires the ability to demonstrate that the system follows a documented workflow. Swarm cannot satisfy this requirement by design.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label violet">What "Embedded Mini-Pipelines" Actually Means</div>
+      <div class="prose">
+        <p>The pattern is hierarchical: the macro-level structure is a pipeline enforced by the Orchestrator (Research → Drafting → Assembly → Review → Submission run sequentially — each phase depends on the prior), while the micro-level structure within each phase is supervisor/worker with parallel workers.</p>
+        <p>Within the review phase specifically, the sequence is: five critics execute in parallel → Orchestrator detects conflicts → Resolution Agent proposes reconciliation → Human Gate blocks until approved. That three-step intra-phase sequence is a mini-pipeline running inside the supervisor/worker phase. This is the structural distinction from pure supervisor/worker, and it matters because the mini-pipeline enforces the ordering of conflict resolution steps that GxP requires.</p>
+      </div>
+      <div class="table-wrap" style="margin-top:14px;">
+        <table>
+          <thead>
+            <tr><th>Level</th><th>Pattern</th><th>Enforced By</th><th>Parallelism?</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Macro (cross-phase)</td><td>Pipeline</td><td>Orchestrator phase sequencing</td><td>No — phases are sequential dependencies</td></tr>
+            <tr><td>Intra-phase (review band)</td><td>Supervisor/Worker</td><td>Orchestrator parallel dispatch</td><td>Yes — all critics run simultaneously</td></tr>
+            <tr><td>Intra-phase (resolution)</td><td>Mini-pipeline</td><td>Orchestrator milestone gate</td><td>No — conflict detect → resolve → human gate is sequential</td></tr>
+            <tr><td>Document state</td><td>Ledger with field ownership</td><td>Protocol Ledger Agent</td><td>Concurrent writes with field-ownership tagging</td></tr>
+            <tr><td>Failure handling</td><td>Durable execution</td><td>Persisted task graph</td><td>Orchestrator restartable without re-running completed agents</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label amber">Failure Handling — Traced</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Step</th><th>Agent</th><th>Action</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1. Detection</td><td>Orchestrator</td><td>Agent-class-specific timeout monitoring (Evidence Agent: 5 min; Section Drafter: 90 sec; Guardrail: 10 sec). Heartbeat confirms liveness.</td></tr>
+            <tr><td>2. Guardrail Rejection</td><td>Compliance Guardrail</td><td>Returns reject + reason code. Orchestrator receives rejection — zero retries. Retrying a compliance violation is repeated non-compliance, not recovery.</td></tr>
+            <tr><td>3. Retry (errors only)</td><td>Orchestrator</td><td>Timeout/error: up to N retries with same or alternate worker. Guardrail rejection: skip to step 4.</td></tr>
+            <tr><td>4. Escalation</td><td>Orchestrator → Human Gate</td><td>Task marked blocked. Three escalation paths: (a) re-run with correction for genuine agent errors; (b) formal exception record for Guardrail false positives; (c) clinical expert escalation for judgment conflicts.</td></tr>
+            <tr><td>5. Partial State</td><td>Protocol Ledger</td><td>Valid sections preserved. Failed section held pending; downstream phases blocked until resolved.</td></tr>
+            <tr><td>6. Audit</td><td>Audit & Traceability Agent</td><td>Failure type, agent ID, retry count, Guardrail reason, escalation path, and human decision logged. FDA inspection trail complete.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label cyan">State Management — Protocol Ledger Design</div>
+      <div class="prose">
+        <p>The core state management problem: 18 agents reading and writing to the same document simultaneously produces version conflicts. Section-level locking prevents most conflicts but introduces deadlock risk — Medical Critic holds §5.1 and requests §5.2; Biostat Critic holds §5.2 and requests §5.1. Classic circular deadlock.</p>
+        <p>Three design decisions resolve this: <strong>lock ordering</strong> (all agents acquire locks in ascending section number order, eliminating circular wait); <strong>field-level ownership tagging</strong> (statistical claims, regulatory citations, and safety requirements within the same section are owned by different agent classes and written to independently — reducing conflict surface by an order of magnitude); and <strong>durable execution</strong> for the Orchestrator (task graph persisted externally, not held in memory, so an Orchestrator crash at hour 72 of a 100-hour run restarts from current state rather than forcing a full replay).</p>
+      </div>
+      <div class="callout blue" style="margin-top:14px;">
+        <strong>Technology stack:</strong> PostgreSQL + pgvector for versioned document storage with append-only commits. Neo4j for cross-version dependency graph. Redis for section-level lock management with timeout-based auto-release. Temporal.io or AWS Step Functions for durable Orchestrator execution.
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ──────────────────────────────────────────────── -->
+  <!-- STEP 7                                           -->
+  <!-- ──────────────────────────────────────────────── -->
+  <section id="step7">
+    <div class="section-header">
+      <div class="step-badge green">07</div>
+      <div class="section-title-block">
+        <h2>Platform Selection &amp; Build/Buy Decision</h2>
+        <div class="section-meta">PHASE · COMPLETED</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label blue">Decision Criteria — Compliance First, Not Technology First</div>
+      <div class="prose">
+        <p>For a Fortune 100 Life Sciences company operating under 21 CFR Part 11, HIPAA, and multi-jurisdiction data residency obligations, platform selection is a compliance decision with a technology consequence — not the reverse. Getting time-to-market right while getting compliance wrong means FDA rejects the protocol. Compliance is the gate; cost and speed are secondary.</p>
+      </div>
+      <div class="table-wrap" style="margin-top:14px;">
+        <table>
+          <thead><tr><th>Criterion</th><th>Why It's Specific to This Engagement</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Data Residency &amp; Sovereignty En
