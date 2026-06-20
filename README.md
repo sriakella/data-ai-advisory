@@ -32,6 +32,8 @@ activation layer that follows — where insight becomes outcomes.
 
 | Date | Vertical | Artifact |
 |---|---|---|
+| 2026-06-20 | Healthcare | [Project Aegis — Autonomous AI for Clinical Trial Protocol Engineering](./healthcare/project-aegis.html) |
+| 2026-06-18 | BFS | [AML Tip-off Suppression Is Not a Filter. It Is a Model Design Constraint.](./bfs/2026-06-18_bfs_decision-record_aml-tip-off-suppression.md) |
 | 2026-06-16 | BFS | [Decision Intelligence + Activation: The Three-Verb Architecture for BFSI](./bfs/2026-06-16_bfs_reference-architecture_di-activation-substrata.md) |
 ---
 ## Index
