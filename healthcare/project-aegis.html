@@ -1324,4 +1324,275 @@ Delta Record<br>
         <table>
           <thead><tr><th>Criterion</th><th>Why It's Specific to This Engagement</th></tr></thead>
           <tbody>
-            <tr><td><strong>Data Residency &amp; Sovereignty En
+            <tr><td><strong>Data Residency &amp; Sovereignty Enforcement</strong></td><td>Clinical trial data must be physically stored within the jurisdiction of origin — EU under GDPR, China requiring a security assessment before export, India under DPDP. Cloud provider default configurations do not satisfy this. Infrastructure-level enforcement, not policy-level, is the requirement.</td></tr>
+            <tr><td><strong>Computer System Validation (CSV) Pre-Built</strong></td><td>21 CFR Part 11 requires IQ (Installation Qualification), OQ (Operational Qualification), and PQ (Performance Qualification) documentation. No cloud AI platform ships these. Producing IQ/OQ/PQ for an 18-agent system is 6–12 months of dedicated validation engineering — a distinct workstream with its own budget, not a software feature.</td></tr>
+            <tr><td><strong>GxP-Grade Security</strong></td><td>SOC2 and HIPAA are table stakes. Clinical PHI under GxP requires private networking, regional data residency guarantees, and model-level auditability — version, prompt, and output logged per 21 CFR Part 11 for every agent call.</td></tr>
+            <tr><td><strong>Model Architecture Portability</strong></td><td>The harder-to-undo lock-in is not cloud provider — it is model weights. Fine-tuning on a proprietary model architecture (Azure OpenAI, Bedrock Claude) means the fine-tune is stranded when the provider deprecates that version. Open-source model weights are the portability anchor that cloud provider selection cannot give you.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label amber">Platform Evaluation</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Platform</th><th>Data Residency</th><th>CSV / Validation</th><th>GxP Security</th><th>Lock-In Risk</th><th>Where It Breaks</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Azure AI Foundry</strong></td>
+              <td><span class="tag green">Strong</span> — 90+ regions, private networking, regional guarantees</td>
+              <td><span class="tag amber">Moderate</span> — Enterprise security built-in; IQ/OQ/PQ must be built by client</td>
+              <td><span class="tag green">Strong</span> — SOC2/HIPAA, private link</td>
+              <td><span class="tag amber">Moderate-High</span> — Tight Microsoft ecosystem coupling</td>
+              <td>Breaks on validation: you build the GxP layer yourself. Azure gives enterprise security, not GxP-ready audit trails.</td>
+            </tr>
+            <tr>
+              <td><strong>AWS Bedrock</strong></td>
+              <td><span class="tag green">Strong</span> — Global regions, data residency controls; configuration-heavy</td>
+              <td><span class="tag red">Weak</span> — AWS Audit Manager has GxP templates; Bedrock itself has no pre-built protocol manufacturing audit trail</td>
+              <td><span class="tag green">Strong</span> — SOC2/HIPAA, private link</td>
+              <td><span class="tag red">High</span> — Deep S3/IAM/Bedrock coupling; hard multi-cloud migration</td>
+              <td>Breaks on lock-in: stack is tightly coupled; model and pipeline migration to another provider requires rewrite.</td>
+            </tr>
+            <tr>
+              <td><strong>Databricks Mosaic AI</strong></td>
+              <td><span class="tag amber">Moderate</span> — Lakehouse unifies data; per-jurisdiction residency requires manual configuration</td>
+              <td><span class="tag green">Strong</span> — Built-in lineage tracking; open-source models enable transparent audit</td>
+              <td><span class="tag amber">Moderate</span> — Not HIPAA-certified by default; PHI requires additional configuration</td>
+              <td><span class="tag green">Low</span> — Open-source model architecture; modular, swappable components</td>
+              <td>Breaks on residency: infrastructure-level per-jurisdiction enforcement requires a custom layer on top.</td>
+            </tr>
+            <tr>
+              <td><strong>Life Sciences AI Vendors</strong><br><em>(Veeva, Saama, PAREXEL)</em></td>
+              <td><span class="tag green">Strong</span> — Purpose-built for pharma data governance</td>
+              <td><span class="tag green">Strong</span> — Pre-built IQ/OQ/PQ packages; pharma-validated workflows</td>
+              <td><span class="tag green">Strong</span> — Built for clinical trial data by design</td>
+              <td><span class="tag amber">Moderate</span> — Vendor roadmap dependency; limited customization headroom</td>
+              <td>Breaks on customization: pre-built workflows don't accommodate the full 18-agent bespoke topology. Standard protocol workflows only.</td>
+            </tr>
+            <tr>
+              <td><strong>Fully Custom Build</strong></td>
+              <td><span class="tag green">Full Control</span></td>
+              <td><span class="tag green">Full Control</span></td>
+              <td><span class="tag green">Full Control</span></td>
+              <td><span class="tag green">None</span></td>
+              <td>Breaks on time and cost: 24–36 months, multi-million investment, majority of enterprise AI programs at this scale fail to reach production-grade quality.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label violet">Data Residency — Why It's a Trial Validity Issue, Not a Legal Issue</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Dimension</th><th>Typical Enterprise AI</th><th>Multi-Jurisdiction Clinical Trial System</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Regulatory scope</strong></td><td>GDPR + maybe HIPAA</td><td>GDPR + HIPAA + China security assessment + India DPDP + country-specific ethics data rules</td></tr>
+            <tr><td><strong>Data type</strong></td><td>Business documents, emails</td><td>PHI — patient medical records, adverse events, trial outcomes</td></tr>
+            <tr><td><strong>Enforcement level</strong></td><td>Cloud provider defaults acceptable</td><td>Infrastructure-level enforcement required — provider defaults are not sufficient</td></tr>
+            <tr><td><strong>Cross-border transfer</strong></td><td>Permitted with Standard Contractual Clauses</td><td>China requires government security assessment; India DPDP requires compliant handling architecture before any export</td></tr>
+            <tr><td><strong>Failure consequence</strong></td><td>Regulatory fine</td><td>Trial invalidation — FDA/EMA can reject the entire protocol submission</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label red">The Single Decision You Cannot Easily Undo</div>
+      <div class="prose">
+        <p>Cloud provider selection is the obvious answer. The more precise answer is <strong>model architecture choice — proprietary vs. open-source weights</strong> — nested inside cloud selection.</p>
+        <p>If the regulatory DSLMs are fine-tuned on Azure OpenAI's or AWS Bedrock's proprietary model architecture, the client owns the fine-tuning data but not the base model. When the provider deprecates that model version (and they will), the regulatory fine-tune is stranded. Re-fine-tuning on a new proprietary base requires re-running the entire validation qualification cycle — IQ, OQ, PQ — against the new model. In a GxP system, a model version change is a validated change that must be documented and qualified.</p>
+        <p>Open-source model weights — a Llama-3-based biomedical model, a Mistral-based regulatory model — are owned fully. Serving infrastructure can be moved to any cloud. The fine-tune is portable. This is the portability anchor that no multi-cloud architecture agreement can replicate.</p>
+      </div>
+      <div class="callout red">
+        <strong>The decision that gets made wrong most often:</strong> Choosing a proprietary frontier model for regulatory fine-tuning because it produces the best benchmark results at the time of selection — then discovering 18 months later that the model has been deprecated and re-qualification will take 9 months. Open-source weights, even at slightly lower initial benchmark performance, produce better long-term outcomes for regulated AI systems.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label green">Recommended Architecture — Hybrid: Vendor Foundation + Custom Agent Layer</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Option</th><th>Validation Burden</th><th>Time to Production</th><th>Lock-In Risk</th><th>Verdict</th></tr></thead>
+          <tbody>
+            <tr><td>Life Sciences AI Vendor (Veeva, Saama, PAREXEL)</td><td>Low — pre-built IQ/OQ/PQ</td><td>6–12 months</td><td>Medium — vendor roadmap</td><td><span class="tag amber">For standard workflows only</span></td></tr>
+            <tr><td>Cloud Platform + Custom GxP Layer (Azure + open-source DSLMs)</td><td>High — build IQ/OQ/PQ from scratch</td><td>18–24 months</td><td>Low — open-source weights portable</td><td><span class="tag amber">For full customization</span></td></tr>
+            <tr><td>Fully Custom Build</td><td>Very High</td><td>24–36 months</td><td>None</td><td><span class="tag red">Not recommended</span></td></tr>
+            <tr><td><strong>Hybrid: Vendor foundation + custom agents on top</strong></td><td>Medium — vendor covers base; custom covers extensions</td><td>12–18 months</td><td>Low — vendor handles compliance; custom layer is portable</td><td><span class="tag green">Recommended for Aegis</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout violet" style="margin-top:16px;">
+        <strong>Hybrid specifics:</strong> Use a validated Life Sciences platform (Veeva Vault Clinical or equivalent) as the document management and e-signature foundation — it ships with pre-built IQ/OQ/PQ. Build the 18-agent orchestration layer on top using open-source DSLMs (biomedical and regulatory) served on Azure or AWS with custom GxP audit logging. The vendor covers compliance infrastructure; the custom layer delivers the differentiated automation. Neither component is stranded if the other changes.
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ──────────────────────────────────────────────── -->
+  <!-- STEP 8                                           -->
+  <!-- ──────────────────────────────────────────────── -->
+  <section id="step8">
+    <div class="section-header">
+      <div class="step-badge green">08</div>
+      <div class="section-title-block">
+        <h2>Roadmap &amp; Risk Register — Steering Committee Delivery</h2>
+        <div class="section-meta">PHASE · COMPLETED</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label blue">Phased Roadmap — 18 Months to Production</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Phase</th><th>Duration</th><th>What Gets Built</th><th>Exit Criterion — Done Means</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Phase 1</strong><br>Foundation &amp; Compliance Validation</td>
+              <td>Months 1–3</td>
+              <td>Azure infrastructure with per-jurisdiction data residency enforcement. 6 segmented RAG indices + Regulatory Knowledge Graph. Citation Ledger + Grounding Enforcer. Compliance Guardrail v1. <strong>CSV validation workstream begins in parallel — not in Phase 6.</strong></td>
+              <td>All 6 indices populated. Knowledge Graph operational. Citation Ledger validating 100% of agent claims. Guardrail blocking 95%+ of ungrounded assertions. IQ documentation initiated and under change control.</td>
+            </tr>
+            <tr>
+              <td><strong>Phase 2</strong><br>Core Agent Development</td>
+              <td>Months 4–6</td>
+              <td>10 core agents: Literature &amp; Evidence, Section Drafter, Protocol Assembly, 5 Critics (Medical, Biostat, Regulatory, Safety, Legal), Resolution &amp; Redraft. Orchestrator v1 + Protocol Ledger + Human Checkpoint Gate v1. <strong>Medical writers and regulatory affairs co-design review workflows in this phase — not shown to them in Phase 5.</strong></td>
+              <td>10 agents operational with correct Orchestrator routing. Protocol Ledger resolving conflicts. Human Gate enforcing sign-off. 60% of draft sections passing Regulatory Critic without human edits. OQ documentation initiated.</td>
+            </tr>
+            <tr>
+              <td><strong>Phase 3</strong><br>Pilot — Single Protocol</td>
+              <td>Months 7–9</td>
+              <td>Full 18-agent workflow on 1 pilot protocol (Phase II, single indication). Localization Agent + Translation Agent + Amendment Impact Agent + Audit &amp; Traceability Agent. <strong>Regulatory pre-engagement meeting with FDA (pre-IND equivalent for AI methodology) and EMA Scientific Advice requested.</strong></td>
+              <td>1 pilot protocol completed end-to-end. 4-week timeline achieved. 90% of critic issues resolved without human intervention. Regulatory agencies briefed on AI's role before first submission.</td>
+            </tr>
+            <tr>
+              <td><strong>Phase 4</strong><br>Scale &amp; Multi-Jurisdiction</td>
+              <td>Months 10–12</td>
+              <td>Country Localization Agent at scale (20 countries). Delta Database fully populated. Multi-jurisdiction workflow: FDA IND + EMA CTA + PMDA + ANVISA + CDSCO.</td>
+              <td>5 protocols in parallel across 20 countries. Localization ≤2 days per country. 95% of regulatory deltas applied correctly. Zero data residency violations. PQ documentation initiated.</td>
+            </tr>
+            <tr>
+              <td><strong>Phase 5</strong><br>Production &amp; Optimization</td>
+              <td>Months 13–15</td>
+              <td>Full 18-agent production deployment. DSLM fine-tuning on biomedical/regulatory corpora. Performance optimization across latency, cost, and accuracy dimensions.</td>
+              <td>10+ protocols in production. 4-week timeline consistent. 90%+ critic accuracy. Cost per protocol ≤$50K. Latency ≤2 hours per draft section.</td>
+            </tr>
+            <tr>
+              <td><strong>Phase 6</strong><br>Maturity &amp; Governance</td>
+              <td>Months 16–18</td>
+              <td>Final GxP inspection readiness review (IQ/OQ/PQ complete — built from Phase 1, reviewed here). SOPs for agent operations, change management, audit trails. Continuous monitoring + model retraining pipeline.</td>
+              <td>FDA/EMA inspection-ready. 100% audit trail completeness. Zero compliance violations. SOPs approved by QA. Model retraining pipeline operational. CSV package submitted to QA for final sign-off.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout red" style="margin-top:16px;">
+        <strong>Critical correction on validation timing:</strong> GxP Computer System Validation (CSV) cannot be built in Phase 6. Every system change during development must be documented and qualified at the time it occurs. CSV runs as a parallel workstream from Phase 1. Phase 6 is final inspection readiness review — not the point where IQ/OQ/PQ writing begins.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label red">Risk Register — Top 6 (Aegis-Specific)</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Risk</th><th>L × I</th><th>Rating</th><th>Mitigation</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Organizational adoption resistance</strong> — Medical writers and regulatory affairs teams don't trust system outputs; revert to full manual review</td>
+              <td>65% × 80%</td>
+              <td><span class="tag red">52% Critical</span></td>
+              <td>Co-design review workflows with end users in Phase 2 — not demonstrated to them in Phase 5. Trust is built by involvement, not by demonstration of a finished system.</td>
+            </tr>
+            <tr>
+              <td><strong>Platform lock-in (model weights)</strong> — Proprietary fine-tune stranded on deprecated model; re-qualification required</td>
+              <td>60% × 70%</td>
+              <td><span class="tag red">42% High</span></td>
+              <td>Open-source DSLMs (biomedical + regulatory) from Phase 1. Hybrid architecture with modular agent framework. Open-source weights are portable; cloud infrastructure is not the binding constraint.</td>
+            </tr>
+            <tr>
+              <td><strong>GxP validation package incomplete</strong> — QA rejects CSV package; FDA/EMA cannot inspect; no submission allowed</td>
+              <td>50% × 80%</td>
+              <td><span class="tag red">40% High</span></td>
+              <td>CSV as parallel workstream from Phase 1. Change control on every system modification from day one. Phase 6 is inspection readiness, not package creation.</td>
+            </tr>
+            <tr>
+              <td><strong>ICH E6(R3) / guidance versioning staleness</strong> — System cites superseded guidance; protocol invalidated</td>
+              <td>40% × 90%</td>
+              <td><span class="tag red">36% High</span></td>
+              <td>Citation Ledger with version-pinned provenance. Change detector on guidance publication. Human Gate confirms guidance version before every approval.</td>
+            </tr>
+            <tr>
+              <td><strong>Regulatory rejection of first AI-assisted protocol</strong> — FDA/EMA issues refuse-to-file or clinical hold; creates organizational momentum to cancel program</td>
+              <td>25% × 95%</td>
+              <td><span class="tag amber">24% High</span></td>
+              <td>Pre-submission regulatory engagement in Phase 3. FDA and EMA must understand AI's role in protocol generation before the first submission — not discover it at review.</td>
+            </tr>
+            <tr>
+              <td><strong>Data residency violation (multi-jurisdiction)</strong> — PHI transferred outside jurisdiction; trial invalidated</td>
+              <td>20% × 95%</td>
+              <td><span class="tag amber">19% Medium</span></td>
+              <td>Infrastructure-level enforcement (not provider defaults) from Phase 1. Compliance Guardrail blocks cross-border data movement. Delta Database tracks country-specific rules.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label green">Success Metrics — Measurable Signals at 6, 12, 18 Months</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Metric</th><th>6 Months (Phase 2)</th><th>12 Months (Phase 4)</th><th>18 Months (Phase 6)</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Protocol Timeline</strong></td><td>8 weeks</td><td>5 weeks</td><td>4 weeks (target)</td></tr>
+            <tr><td><strong>Sections Passing Critics Without Human Edits</strong></td><td>60%</td><td>80%</td><td>90%+</td></tr>
+            <tr><td><strong>Human Intervention Rate</strong></td><td>40% of sections require edits</td><td>20% require edits</td><td>≤10% require edits</td></tr>
+            <tr><td><strong>Localization Time per Country</strong></td><td>Not yet scaled</td><td>≤2 days</td><td>≤1 day</td></tr>
+            <tr><td><strong>Cost per Protocol</strong></td><td>≤$150K (PoC)</td><td>≤$75K</td><td>≤$50K (target)</td></tr>
+            <tr><td><strong>Audit Trail Completeness</strong></td><td>90%</td><td>95%</td><td>100%</td></tr>
+            <tr><td><strong>Compliance Violations</strong></td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td><strong>Data Residency Violations</strong></td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td><strong>CSV Workstream Status</strong></td><td>IQ documentation under change control</td><td>OQ complete; PQ initiated</td><td>Full IQ/OQ/PQ signed off by QA</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label amber">The One Thing That Kills the Program</div>
+      <div class="prose">
+        <p><strong>Internal killer: QA rejection of the GxP validation package.</strong> The system either meets 21 CFR Part 11 documentation standards or it does not. There is no partial compliance, no workaround, and no architectural fix. This is the only risk on the register that is binary — every other risk has a technical or process mitigation. The early warning signal is audit trail completeness below 90% at the Phase 1 exit gate. If you leave Phase 1 with incomplete audit trail coverage, you will not recover that gap by Phase 6.</p>
+        <p><strong>External killer: FDA refuse-to-file on the first AI-generated protocol.</strong> One high-profile regulatory rejection in Phase 5 creates organizational momentum that no subsequent technical improvement can reverse. The medical team attributes the rejection to the AI — regardless of whether human review in the HITL gate was the actual failure point — and the program is cancelled. The mitigation is regulatory pre-engagement in Phase 3, before the first submission, so FDA and EMA have formally acknowledged the AI-assisted workflow rather than encountering it at review.</p>
+      </div>
+      <div class="callout violet">
+        <strong>Three decisions the steering committee must approve today:</strong> (1) Hybrid platform — Life Sciences AI vendor foundation plus custom agents on open-source model weights. (2) CSV validation as a parallel workstream from Month 1, with dedicated budget and staffing. (3) Regulatory pre-engagement meeting with FDA and EMA in Phase 3, before the first protocol submission. Get these three right and the architecture delivers. Miss any one and the architecture is irrelevant.
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ══════════════ CLOSING ══════════════ -->
+  <section id="close">
+    <div style="text-align:center; padding: 40px 0 20px;">
+      <div style="font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent2);margin-bottom:16px;">Architecture Complete</div>
+      <h2 style="font-family:var(--serif);font-size:1.8rem;color:var(--text);margin-bottom:16px;line-height:1.3;">Eight Steps. One System.<br>From 6–8 Months to 4 Weeks.</h2>
+      <p style="color:var(--text-dim);max-width:580px;margin:0 auto;font-size:15px;line-height:1.7;">The complete architecture for Project Aegis — problem decomposition through steering committee delivery. Every decision traced to its domain constraint. Every risk mapped to its mitigation. Every agent to its responsibility.</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ════════════════════════════════ FOOTER ════════════════════════════════ -->
+<footer>
+  Project Aegis · AI Architecture Working Journal<br>
+  the Client · Clinical Trial Protocol Automation<br>
+  <span style="color: var(--text-muted); font-size: 10px;">Updated iteratively as each architectural layer is defined · Not for external distribution</span>
+</footer>
+
+</body>
+</html>
