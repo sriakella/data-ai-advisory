@@ -1,0 +1,15 @@
+theme: minima
+title: data-ai-advisory
+description: >-
+  Reference architectures, decision records, and case patterns for Data & AI
+  advisory across BFS, Retail, CPG, and Healthcare. Decision Intelligence + Activation.
+url: "https://sriakella.github.io"
+baseurl: "/data-ai-advisory"
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge

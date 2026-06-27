@@ -1,0 +1,16 @@
+<!-- Mermaid.js — renders ```mermaid code blocks as diagrams site-wide -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // kramdown renders ```mermaid as <code class="language-mermaid"> inside <pre>
+  // Mermaid v10 requires <pre class="mermaid"> — convert before initialization.
+  document.querySelectorAll('code.language-mermaid').forEach(function (code) {
+    var wrapper = code.closest('div.language-mermaid') || code.parentElement;
+    var pre = document.createElement('pre');
+    pre.className = 'mermaid';
+    pre.textContent = code.textContent;
+    wrapper.parentNode.replaceChild(pre, wrapper);
+  });
+  mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+});
+</script>
