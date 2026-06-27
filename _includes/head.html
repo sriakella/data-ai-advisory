@@ -1,0 +1,27 @@
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {%- seo -%}
+  <link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}">
+  {%- feed_meta -%}
+  {%- if jekyll.environment == 'production' and site.google_analytics -%}
+    {%- include google-analytics.html -%}
+  {%- endif -%}
+  <!-- Mermaid.js — renders ```mermaid code blocks as diagrams site-wide -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // kramdown renders ```mermaid as <code class="language-mermaid"> inside <pre>
+    // Mermaid v10 requires <pre class="mermaid"> — convert before init.
+    document.querySelectorAll('code.language-mermaid').forEach(function (code) {
+      var wrapper = code.closest('div.language-mermaid') || code.parentElement;
+      var pre = document.createElement('pre');
+      pre.className = 'mermaid';
+      pre.textContent = code.textContent;
+      if (wrapper.parentNode) wrapper.parentNode.replaceChild(pre, wrapper);
+    });
+    mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+  });
+  </script>
+</head>
