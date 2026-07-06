@@ -1,5 +1,5 @@
 ---
-title: "LinkedIn — Prompt Engineering Framework for Business Roles"
+title: "Prompt Engineering Framework for Business Roles"
 source_artifact: frameworks/2026-07-06_cross-industry_framework_prompt-engineering-for-business-roles.md
 published: 2026-07-06
 ---
