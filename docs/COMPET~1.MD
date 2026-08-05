@@ -154,32 +154,7 @@ Apply per JD. Score only rows the JD actually demands — do not force every row
 
 ### JD Scoring Log
 
-#### JD-1 — AI Solution Architect, Cognida.ai (Hyderabad, India · Full-Time)
-
-**JD character:** classical ML/DL/NLP/CV product-AI architecture with explicit hands-on Python development — not a GenAI/agentic-centric posting. No RAG, agents, tool-calling, guardrails, or LLM vocabulary appears anywhere in the source text. Cloud is named at familiarity level across all three hyperscalers, not mastery of one. No data-architecture depth (no semantic layer, identity resolution, ontology, governance language). No formal enterprise-method vocabulary (no ADR, ATAM, utility tree), though "communicate trade-offs to stakeholders" gestures at it informally.
-
-| Pillar | Row demanded | Depth demanded | Held? | Gap |
-|---|---|---|---|---|
-| AI | Model evaluation (iterative refinement via "experimental data and feedback loops") | F | D | None — exceeds demand |
-| AI | Fine-tuning mechanics (implied by "deep learning" as a primary pillar) | F | A | **Gap** — profile holds this at Aware only; JD implies Fluent. Close path: one fine-tuning build (LoRA/PEFT) on an open model, 1–2 weeks |
-| AI | Model selection and routing (implied by "PoC through production" model lifecycle) | F | D | None |
-| Enterprise | Communicating technical decisions and trade-offs to stakeholders | F | D | None |
-| Enterprise | Translating business requirements into a solution blueprint | F | D | None |
-| Enterprise | Four-block decomposition (implicit in "end-to-end, scalable AI architecture") | D | D | None |
-| Cloud | Cloud platform familiarity — AWS, GCP, or Azure (explicitly "familiarity," not mastery) | A | F (exceeds A) | None |
-| Cloud | MLOps for model deployment and maintenance | F | F | None |
-| Data | *(JD is silent — no data-architecture rows demanded; omitted per scoring notes)* | — | — | — |
-| Seams | *(JD is silent — no agentic/RAG content, so grounding, agent-identity, and retrieval-governance seams are not demanded)* | — | — | — |
-
-**Out-of-scope filter check — flag, not a gap:** "hands-on development, integration and implementation" and "strong proficiency in Python" as an explicit, non-negotiable requirement both land inside §4's out-of-scope filter (hands-on pipeline/feature development). This is not scored as a capability gap — it is a **mandate signal**: the role blends architecture with IC-level build work, which is a narrower mandate than the Design-authority Principal lane this profile targets.
-
-**Seniority check:** 14+ years is below this profile's implicit 15–19+ band, and the posting names no direct reports, no team-leadership language, and no design-authority or standards-ownership mandate ("leading development" refers to models/components, not people or architecture governance). Combined with the hands-on Python requirement, this reads as a **senior IC / hands-on architect role wearing an "AI Solution Architect" title**, not a Principal-altitude mandate.
-
-**Verdict:** Rows actually demanded are held at or above the required depth — no capability gap of consequence. The disqualifying signal, if any, is **mandate altitude**, not skill: hands-on coding as a non-negotiable plus the absence of design-authority language suggests this is a builder role below the target seniority band. Score on capability alone would read strong; score on mandate fit reads as a step down. Recommend treating as **Get Ready / mandate-mismatch flag** rather than a clean Apply Now, and probing in a screening call whether "leading development" carries any design-authority or governance scope not visible in the posted text.
-
----
-
-#### JD-2 — Senior AI Solution Architect (Specialist Solutions Architect – SSA), AWS India (Bengaluru/Mumbai/Gurugram)
+#### JD-1 — Senior AI Solution Architect (Specialist Solutions Architect – SSA), AWS India (Bengaluru/Mumbai/Gurugram)
 
 **JD character:** a hyperscaler customer-facing technical-advisory role — GenAI/Agentic-centric, deep on AWS-native AI/ML services and hands-on production LLM deployment, near-silent on Data architecture and general cloud architecture patterns (no event-driven, sync/async, or data-modeling vocabulary appears). The mandate is field/pre-sales technical leadership (trusted advisor, roadmap influence, reference architectures, workshops) rather than internal enterprise Principal Architect ownership of a build.
 
