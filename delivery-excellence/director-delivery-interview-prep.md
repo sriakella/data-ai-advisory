@@ -49,15 +49,15 @@ I was accountable for the program outcome — governing 3 workstream leads, owni
 
 **Action:**
 
-1. **Stage-gated the program** at Discovery → Data Profiling → Architecture → Build → UAT → Hypercare. The profiling gate was non-negotiable — no workstream moved to build without data quality metrics (null rates, cardinality, PII scan) signed off. This was a practice I had institutionalized across the CoE after observing that the #1 cause of mid-build scope surprises across our portfolio was skipped or shallow data profiling.
+1. **Stage-gated the program** at **Discovery → Data Profiling → Architecture → Build → UAT → Hypercare**. The profiling gate was non-negotiable — no workstream moved to build without data quality metrics (null rates, cardinality, PII scan) signed off. This was a practice I had institutionalized across the CoE after observing that the #1 cause of mid-build scope surprises across our portfolio was skipped or shallow data profiling.
 
-2. **Managed cross-workstream dependencies** using a dependency structure matrix (DSM). The identity resolution design was the critical path — both the ML segmentation and activation connector workstreams depended on its output schema. I sequenced delivery so identity resolution completed its schema contract 2 sprints ahead of downstream consumers.
+2. **Managed cross-workstream dependencies** using a **dependency structure matrix (DSM)**. The identity resolution design was the critical path — both the ML segmentation and activation connector workstreams depended on its output schema. I sequenced delivery so identity resolution completed its schema contract 2 sprints ahead of downstream consumers.
 
 3. **Stakeholder management (Pillar 2 — Stakeholder Engagement Assessment Matrix):** Mapped all 12 brand stakeholders on the **Unaware→Resistant→Neutral→Supportive→Leading** spectrum. Most were "Neutral" at kickoff — they didn't oppose the platform but weren't invested in it. I ran brand-specific data preview sessions (showing their actual customer data quality issues) to move them to "Supportive" before the architecture gate. This was critical because brand sign-off on the unified identity model was a hard gate — without it, we'd have built a platform nobody trusted.
 
-4. **Negotiated phased scope** when 3 brands pushed to add additional data sources mid-build. Used the formal Change Request Log — each new source required impact analysis on timeline, budget, and downstream dependencies. Deferred 2 sources to Phase 2 to protect critical path. Communicated the trade-off to the CDO with options: "We can absorb Brand X's loyalty data now if we defer Brand Y's social signals to Phase 2. Here's the activation value comparison."
+4. **Negotiated phased scope** when 3 brands pushed to add additional data sources mid-build. Used the formal **Change Request Log** — each new source required impact analysis on timeline, budget, and downstream dependencies. Deferred 2 sources to Phase 2 to protect critical path. Communicated the trade-off to the CDO with options: "We can absorb Brand X's loyalty data now if we defer Brand Y's social signals to Phase 2. Here's the activation value comparison."
 
-5. **Tracked CPI/SPI weekly.** When the ingestion workstream's SPI dropped to 0.88 in Sprint 4 (source-system CDC complexity was higher than assumed), I triggered the assumption log review, reassigned 2 data engineers from the activation workstream (which was ahead of schedule), and recovered SPI to 0.97 by Sprint 6.
+5. **Tracked CPI/SPI weekly.** When the ingestion workstream's SPI dropped to 0.88 in Sprint 4 (source-system CDC complexity was higher than assumed), I triggered the **assumption log review**, reassigned 2 data engineers from the activation workstream (which was ahead of schedule), and recovered SPI to 0.97 by Sprint 6.
 
 6. **Commercial Accountability** This program carried direct P&L (Profit & Loss) exposure — I owned the budget-to-actual variance, alongside the schedule. The Phase 2 deferral decision (move 4, above) was as much a margin-protection call as a timeline call: absorbing 2 additional data sources mid-build without a change order would have eroded margin on a fixed-scope commercial arrangement. (comment: Framing the CDO conversation around activation value AND cost impact — not schedule alone — is what makes this a commercial story, not just a delivery story. Use CPI (Cost Performance Index), not just SPI, when asked directly about budget ownership).
 
@@ -80,7 +80,7 @@ Deliver all 3 programs concurrently with a 20–40 person cross-functional team,
 
 1. **Hybrid methodology tailoring:** Recognized that forcing a single methodology across 3 programs with different risk profiles would fail. Implemented Kanban for ongoing marketing operations work, Scrum for feature development sprints, and waterfall gates for compliance milestones (banking regulatory sign-offs). Documented this in a reusable delivery playbook that the practice adopted across all banking engagements.
 
-2. **Cross-program dependency management:** All 3 programs consumed the same customer behavioural data from the bank's core data warehouse. A schema change or refresh cadence change in one program could break the others. I established a shared data contract registry — any schema change required cross-program impact assessment before approval. This eliminated the 2–3 cross-program breakages per quarter we'd been experiencing.
+2. **Cross-program dependency management:** All 3 programs consumed the same customer behavioural data from the bank's core data warehouse. A schema change or refresh cadence change in one program could break the others. I established a **shared data contract registry** — any schema change required cross-program impact assessment before approval. This eliminated the 2–3 cross-program breakages per quarter we'd been experiencing.
 
 3. **Stakeholder communication (Pillar 2 — Communications Management Plan):** Designed a tiered communication cadence: weekly sprint demos for each program team, biweekly cross-program dependency sync (I chaired this), monthly steering with all 3 client sponsors in one room. The monthly steering was initially contentious — each sponsor wanted to dominate the agenda. I restructured it with a standardized portfolio health view (RAG, key metrics, decisions needed) so each program got equal airtime and the steering focused on trade-offs, not status updates.
 
@@ -297,3 +297,10 @@ Average delivery cycle time: reduced by 22% portfolio-wide
 # Q: You clearly have a strong technical background — why not stay an architect?
 - A: it's true, I started my career in technical role and eventually moved into delivery as I found most of the projects won't fail because of the architechture, but due to lack of governance, capacity building and stakeholder trust. Hence I made a delibrate choice to be part of the delivery and stay technically fluent enough to govern AI/ML and data platform delivery, not build it.
 
+# Artifacts:
+- Change Request Log
+- assumption log review
+- SEAM
+- dependency structure matrix (DSM)
+- Shared Data Contract Registry
+- 
