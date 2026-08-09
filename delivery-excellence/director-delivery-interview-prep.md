@@ -45,7 +45,7 @@
 LTM was engaged to build a multi-brand data platform for the largest global beauty retailer — unifying 40M+ customer profiles across 12 consumer brands on AWS + Databricks + Reltio. Three workstreams ran in parallel: identity resolution design, ML segmentation pipeline build, and paid-media activation connector delivery. Each brand had independent data ownership, conflicting schemas, and different definitions of "customer."
 
 **Task:**
-I was accountable for the program outcome — governing 3 workstream leads, owning the stakeholder relationships, and making the cross-workstream trade-off decisions that individual PMs don't have authority to make. My leads and PMs were responsible for execution; I was accountable for whether the platform delivered measurable activation value (audience match rates), not just a technical migration.
+I was accountable for the program outcome — governing 3 workstream leads, owning the stakeholder relationships, the budget-to-actual variance, and making the cross-workstream trade-off decisions that individual PMs don't have authority to make. My leads and PMs were responsible for execution; I was accountable for whether the platform delivered measurable activation value (audience match rates), not just a technical migration.
 
 **Action:**
 
@@ -59,10 +59,10 @@ I was accountable for the program outcome — governing 3 workstream leads, owni
 
 5. **Tracked CPI/SPI weekly.** When the ingestion workstream's SPI dropped to 0.88 in Sprint 4 (source-system CDC complexity was higher than assumed), I triggered the assumption log review, reassigned 2 data engineers from the activation workstream (which was ahead of schedule), and recovered SPI to 0.97 by Sprint 6.
 
+6. **Commercial Accountability** This program carried direct P&L (Profit & Loss) exposure — I owned the budget-to-actual variance, alongside the schedule. The Phase 2 deferral decision (move 4, above) was as much a margin-protection call as a timeline call: absorbing 2 additional data sources mid-build without a change order would have eroded margin on a fixed-scope commercial arrangement. (comment: Framing the CDO conversation around activation value AND cost impact — not schedule alone — is what makes this a commercial story, not just a delivery story. Use CPI (Cost Performance Index), not just SPI, when asked directly about budget ownership).
+
 **Result:**
 Achieved 35% improvement in audience match rates at launch. All 12 brands onboarded to the unified platform. Delivered within the original timeline envelope despite mid-build scope pressure. The phased scope approach was adopted as a standard practice in the CoE for multi-brand programs.
-
-**Commercial Accountability callout:** This program carried direct P&L (Profit & Loss) exposure — I owned the budget-to-actual variance, not just the schedule. The Phase 2 deferral decision (move 5, above) was as much a margin-protection call as a timeline call: absorbing 2 additional data sources mid-build without a change order would have eroded margin on a fixed-scope commercial arrangement. Framing the CDO conversation around activation value AND cost impact — not schedule alone — is what makes this a commercial story, not just a delivery story. Use CPI (Cost Performance Index), not just SPI, when asked directly about budget ownership.
 
 ---
 
