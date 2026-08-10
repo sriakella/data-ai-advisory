@@ -335,7 +335,7 @@ Average delivery cycle time: reduced by 22% portfolio-wide
 
 # Q4: Risk/Dependency entry: "Three programs are pulling data from the same source system. A schema change breaks one of them. How do you prevent that from becoming a recurring problem?"
 
-- All 3 programs pulled customer persona data from the same core banking data warehouse with a shared schema. A change in one program could silently break the others — we were seeing 2 to 3 cross-program breakages per quarter. I established a shared data contract registry: any schema change required cross-program impact assessment and agreement before approval. That eliminated the recurring breakages.
+- All 3 programs pulled customer persona data from the same core banking data warehouse with a shared schema. A change in one program could silently break the others — we were seeing 2 to 3 cross-program breakages per quarter. I established a shared data contract registry: any schema change required cross-program impact assessment and agreement before approval. That eliminated the recurring breakages. 
 
 # Q5 — Stakeholder entry: "You've got three client sponsors in one steering meeting, and each one wants the conversation to be about their program. How do you run that meeting so it actually works?"
 - Three tiers: weekly sprint demos per program team, biweekly cross-program dependency sync which I chaired, and monthly steering with all 3 client sponsors together. The monthly steering was initially contentious — every sponsor wanted to dominate the agenda. I restructured it around a standardized portfolio health view — RAG, key metrics, decisions needed — so each program got equal airtime and the conversation stayed on trade-offs, not status updates.
