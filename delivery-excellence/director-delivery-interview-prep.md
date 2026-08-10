@@ -310,32 +310,38 @@ Average delivery cycle time: reduced by 22% portfolio-wide
 
 - CDC, CPI/SPI, PII, UAT, DSM, SOW, T&M, P&L, SLA, BAG, ML/AI/GenAI, RACI(implicit).
 
-# Story A
+## Story A
 
-# Q6 — Data Platform/Migration entry: "You had three workstreams that all depended on one team's output. How did you sequence the work so the dependent teams weren't left waiting or building on a moving target?"
+### Q6 — Data Platform/Migration entry: "You had three workstreams that all depended on one team's output. How did you sequence the work so the dependent teams weren't left waiting or building on a moving target?"
 - 3 workstreams identity resolution was the critical path; ML segmentation and activation connectors both depend on it's output schema. using a dependecy schema matrix, i sequenced the work so identity resolution completed it's schema contracts 2 sprints before the other 2 workstreams . so that the downstream teams can then have a stable contract to build against instead of chasing a moving target.
 
-# Q7 — Data Quality entry: "Some teams treat data quality checks as a nice-to-have that slows things down. How do you make sure it doesn't get skipped, and why did you make that call mandatory?"
+### Q7 — Data Quality entry: "Some teams treat data quality checks as a nice-to-have that slows things down. How do you make sure it doesn't get skipped, and why did you make that call mandatory?"
 
 - I had established staged gates across Discovery-> Data Profiling-> Architecture-> Build-> UAT-> Hypercare. One of the staged gate is data profiling where I had established data quality checks using data purview (Null, Cardinality and ).Also it's mandatory to get a sign-off from each and every stakeholder i.e 12 Brands. Data profiling is usually hidden and underestimated by many program managers which constiture 30% of the data quality work. 
 
-# Story B 
+## Story B 
 
-# Q1: Methodology entry: "How do you decide which delivery methodology to use when a program has very different types of work happening at once — some steady-state, some feature-driven, some compliance-heavy?"
+### Q1: Methodology entry: "How do you decide which delivery methodology to use when a program has very different types of work happening at once — some steady-state, some feature-driven, some compliance-heavy?"
 
 - There is martech program spanning across 3 stakeholders which includes the tech stack SFMC, marketo, adobe analytics to be activated on the DMP layer. having a common governance model to all 3 programs will break the program. I developed a hybrid model to address the steady state with Kanban for the marketing on-going operations; scrum for the feature development using sprints; waterfall gate model for the banking compliance adherence.
 
-# Q2: Vendor/Contract entry: "You're running multiple programs for the same client under different contract models — some time-and-materials, some fixed-price — at the same time. How do you manage that without one undermining trust in the other?
+### Q2: Vendor/Contract entry: "You're running multiple programs for the same client under different contract models — some time-and-materials, some fixed-price — at the same time. How do you manage that without one undermining trust in the other?
 
 - For fixed-price, the risk was scope creep — I enforced the Change Request Log rigorously to keep scope and cost aligned. For T&M, I tracked utilization weekly and proactively flagged to the client whenever burn rate was running ahead of value delivered — that's what built trust that I was managing their investment, not just billing hours.
 
-# Q3 — Capacity entry: Two programs need the same scarce specialist at the same time. How do you resolve that without damaging either client relationship?
+### Q3 — Capacity entry: Two programs need the same scarce specialist at the same time. How do you resolve that without damaging either client relationship?
 
 - I built a skills-based capacity matrix across all analytics engineers — SFMC, Marketo, Adobe Analytics — updated monthly. I spotted that Program 2 was stalled without a Marketo specialist, while Program 3 had one underutilized. I reallocated that engineer from Program 3 into Program 2, negotiated transparently with both sponsors, fully documented.
 
-# Q4: Risk/Dependency entry: "Three programs are pulling data from the same source system. A schema change breaks one of them. How do you prevent that from becoming a recurring problem?"
+### Q4: Risk/Dependency entry: "Three programs are pulling data from the same source system. A schema change breaks one of them. How do you prevent that from becoming a recurring problem?"
 
-- All 3 programs pulled customer persona data from the same core banking data warehouse with a shared schema. A change in one program could silently break the others — we were seeing 2 to 3 cross-program breakages per quarter. I established a shared data contract registry: any schema change required cross-program impact assessment and agreement before approval. That eliminated the recurring breakages. 
+- All 3 programs pulled customer persona data from the same core banking data warehouse with a shared schema. A change in one program could silently break the others — we were seeing 2 to 3 cross-program breakages per quarter. I established a shared data contract registry: any schema change required cross-program impact assessment and agreement before approval. That eliminated the recurring breakages.
 
-# Q5 — Stakeholder entry: "You've got three client sponsors in one steering meeting, and each one wants the conversation to be about their program. How do you run that meeting so it actually works?"
+### Q5 — Stakeholder entry: "You've got three client sponsors in one steering meeting, and each one wants the conversation to be about their program. How do you run that meeting so it actually works?"
 - Three tiers: weekly sprint demos per program team, biweekly cross-program dependency sync which I chaired, and monthly steering with all 3 client sponsors together. The monthly steering was initially contentious — every sponsor wanted to dominate the agenda. I restructured it around a standardized portfolio health view — RAG, key metrics, decisions needed — so each program got equal airtime and the conversation stayed on trade-offs, not status updates.
+
+## Story D
+
+### Q1 — Portfolio Governance entry: "AI/ML initiatives often turn into a pile of models nobody actually uses. How do you make sure that doesn't happen in a program you're governing?"
+
+there are 2 AI/ML programs. 1. FSO with 4 layers being predicted and optimized (schedule, parts, forecast and qualify) agentic architecture being established on snowflake cortex agents along withe OEM. 2. VoC ML based dashboard for the engineers to access. to deliver these 2 programs i had established a stage-gate value creation delivery model: Discovery->data profiling & feature engineering -> model selection and validation-> Integration & embedding->UAT->hypercare. this process enabled ML models & agents to deliver best in class results where FSO program got successful with 15% up in FTFR and VoC dashboard is widely availabile for the 200+ engineers on the floor. Also, the value stage gate model has been standardized with CoE and all future programs to follow the same delivery model.
