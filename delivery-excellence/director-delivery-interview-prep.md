@@ -142,7 +142,7 @@ Manage delivery of these AI/ML-enabled programs — ensuring that model developm
 
 1. **Value-first gate for AI/ML delivery:** Introduced a rule: every model required a documented business decision change before build approval. The data science team couldn't build a churn prediction model just because the data existed — they had to articulate: "This model will change how the dispatcher assigns priority. Here's the current decision process, here's how it changes, here's the expected FTFR improvement." This prevented the "model graveyard" problem — models built but never operationalized.
 
-2. **Capacity planning for AI/ML talent:** Our CoE had strong data engineering bench but thin ML engineering capability. I ran a skills inventory and gap analysis — identified that we had 0 dedicated ML engineers but 2 programs needing model deployment and MLOps. Secured 2 ML engineers through targeted augmentation, paired each with a senior data engineer for knowledge transfer. Built a 90-day ramp plan so the augmented talent could operate independently by Sprint 6.
+2. **Capacity planning for AI/ML talent:** Our CoE had strong data engineering bench but thin ML engineering capability. I ran a skills inventory and gap analysis — identified that we had 0 dedicated ML engineers but 2 programs needing model deployment and MLOps. Secured 2 ML engineers through **targeted augmentation**, paired each with a senior data engineer for knowledge transfer. Built a 90-day ramp plan so the augmented talent could operate independently by Sprint 6.
 
 3. **Stage-gate adaptation for ML programs:** Traditional stage gates (Architecture → Build → UAT) don't fit ML development, where model training is iterative and "done" is a performance threshold, not a feature checklist. Adapted the gates: Discovery → Data Profiling & Feature Engineering → Model Training & Validation (with defined accuracy/F1 thresholds) → Integration & Embedding → UAT → Hypercare. Each gate had ML-specific exit criteria — model performance benchmarks, bias checks, explainability documentation.
 
@@ -204,7 +204,7 @@ The following are the 5 core facets from the Stakeholder & Client Management res
 | Competency | Signal to Project |
 |---|---|
 | Executive communication | Steering meetings cut 60→20 min; options-not-status framing |
-| People development | 4 PMs promoted to Principal/Director track in 3 years |
+| People development | 4 PMs promoted to Associate Director track in 3 years |
 | Client trust → revenue | 30%+ practice revenue growth at Xerago through delivery trust |
 | Cross-cultural delivery | 12-brand global program; 30+ market delivery at AECC; 3 time zones at BipSum |
 | Data literacy | Statistics MSc; architecture background; can challenge data modeling decisions |
@@ -301,10 +301,13 @@ Average delivery cycle time: reduced by 22% portfolio-wide
 - Change Request Log
 - assumption log review
 - SEAM
+- SPI tracked weekly (where should move people next)
 - dependency structure matrix (DSM)
 - Shared Data Contract Registry
 - standardized portfolio health view (Story B:fixed structure (RAG + key metrics + decisions needed))
 - Utilization Summary (weekly - T&M)
+- Multi-Year Budget Forecast Model
+- Portfolio P&L Risk Dashboard
 
 # Acronyms
 
@@ -312,12 +315,20 @@ Average delivery cycle time: reduced by 22% portfolio-wide
 
 ## Story A
 
-### Q6 — Data Platform/Migration entry: "You had three workstreams that all depended on one team's output. How did you sequence the work so the dependent teams weren't left waiting or building on a moving target?"
-- 3 workstreams identity resolution was the critical path; ML segmentation and activation connectors both depend on it's output schema. using a dependecy schema matrix, i sequenced the work so identity resolution completed it's schema contracts 2 sprints before the other 2 workstreams . so that the downstream teams can then have a stable contract to build against instead of chasing a moving target.
+### Q1 — Stakeholder entry: "Tell me about a time you had to bring skeptical stakeholders on board before a critical milestone."
+- 12+ brand stakeholders, most starting Neutral — not opposed, not invested. Mapped via SEAM (Stakeholder Engagement Assessment Matrix) across Unaware→Resistant→Neutral→Supportive→Leading. Moved brands from Neutral to Supportive through brand-specific data preview sessions — showing each brand their own data quality issues — before the architecture gate, because brand sign-off on the unified identity model was a hard gate; without it, the platform would have launched with no trust behind it. Result: 35% improvement in audience match rates.
 
-### Q7 — Data Quality entry: "Some teams treat data quality checks as a nice-to-have that slows things down. How do you make sure it doesn't get skipped, and why did you make that call mandatory?"
+### Q2 — Schedule/EVM entry: "Describe a time your schedule started slipping and how you recovered it — what signal told you, and what did you do?"
+- Three workstreams ran in parallel; accountable for the program outcome. Tracked CPI/SPI weekly — SPI dropped to 0.88 by Sprint 4. Triggered an assumption log review: root cause was source-system CDC (Change Data Capture) complexity being higher than assumed. Reassigned 2 engineers from the activation workstream (running ahead of schedule) into the lagging identity resolution track. SPI recovered to 0.97 by Sprint 6.
 
-- I had established staged gates across Discovery-> Data Profiling-> Architecture-> Build-> UAT-> Hypercare. One of the staged gate is data profiling where I had established data quality checks using data purview (Null, Cardinality and ).Also it's mandatory to get a sign-off from each and every stakeholder i.e 12 Brands. Data profiling is usually hidden and underestimated by many program managers which constiture 30% of the data quality work. 
+### Q3 — Commercial/Scope entry: "A client pushes for more scope mid-program. How do you handle it without blowing the timeline or the budget?"
+- 3 brands pushed for 3 additional data sources mid-build. Ran impact analysis via the Change Request Log — cost, timeline, downstream dependencies. Negotiated a trade-off with the CDO: absorbed one brand's loyalty data into Phase 1, deferred the remaining 2 sources to Phase 2 to protect critical path. Also a margin-protection call — absorbing all 3 without a change order would have eroded margin on a fixed-scope arrangement.
+
+### Q4 — Data Platform/Migration entry: "You had three workstreams that all depended on one team's output. How did you sequence the work so the dependent teams weren't left waiting or building on a moving target?"
+- Identity resolution was the critical path; ML segmentation and activation connectors both depended on its output schema. Using a Dependency Structure Matrix (DSM), sequenced identity resolution's schema contract 2 sprints ahead of the downstream teams — giving them a stable contract to build against instead of chasing a moving target.
+
+### Q5 — Data Quality entry: "What do you insist gets checked before build starts, and why did you make that mandatory?"
+- Made data profiling a non-negotiable stage-gate — no workstream moves to build until data quality metrics clear: null rates, cardinality, PII (Personally Identifiable Information) scan. Skipped or shallow profiling was the #1 cause of mid-build scope surprises across the portfolio — programs were consistently underestimating data quality remediation effort by ~30%. That's why it was institutionalized as a mandatory CoE-wide gate, not a recommendation.
 
 ## Story B 
 
@@ -344,4 +355,26 @@ Average delivery cycle time: reduced by 22% portfolio-wide
 
 ### Q1 — Portfolio Governance entry: "AI/ML initiatives often turn into a pile of models nobody actually uses. How do you make sure that doesn't happen in a program you're governing?"
 
-there are 2 AI/ML programs. 1. FSO with 4 layers being predicted and optimized (schedule, parts, forecast and qualify) agentic architecture being established on snowflake cortex agents along withe OEM. 2. VoC ML based dashboard for the engineers to access. to deliver these 2 programs i had established a stage-gate value creation delivery model: Discovery->data profiling & feature engineering -> model selection and validation-> Integration & embedding->UAT->hypercare. this process enabled ML models & agents to deliver best in class results where FSO program got successful with 15% up in FTFR and VoC dashboard is widely availabile for the 200+ engineers on the floor. Also, the value stage gate model has been standardized with CoE and all future programs to follow the same delivery model.
+- Two related programs: (1) FSO (Field Service Optimisation) for a European CV manufacturer — 4-layer agentic architecture on Snowflake Cortex Agents: Forecasting, Scheduling, Routing, Parts Intelligence. (2) A Field Service Intelligence Dashboard with predictive maintenance scoring for a separate global automotive OEM, built on Databricks — surfacing service requests, parts availability, scheduling, and FTFR (First Time Fix Rate) forecasts for 200+ field engineers. Introduced a value-first gate: every model required a documented business decision change before build approval — prevented the "model graveyard" problem. Adapted the stage-gate for ML: Discovery → Data Profiling & Feature Engineering → Model Training & Validation (accuracy/F1 thresholds) → Integration & Embedding → UAT → Hypercare — because "done" for a model is a performance threshold, not a feature checklist. Results: FSO 15% FTFR improvement; dashboard live for 200+ engineers. Both standardized as CoE norms.
+
+### Q2 — Capacity entry: "Your team has strong data engineering depth but almost no ML engineering capability, and two programs suddenly need model deployment. What do you do?"
+
+- the skills inventory showed 0 ML engineers to be deployed in the program. I had used targeted augmentation and found 2 ML engineers. Tagged these 2 ML engineers to 2 senior data engineers to ramp up and learn to work independently to deploy the models. BY sprint 6 they are to able to operate and deliver at the desired level. that's how capacity shortcomings had been overcame.
+
+### Q3 — GenAI/AI Agent entry: "You've got multiple AI agents that need to operate together in one platform. How do you keep that from becoming an integration mess?"
+
+FSO's 4 autonomous agents needed to coordinate. I treated each as its own workstream, own stage-gate — architecture team and I defined interaction contracts, orchestration, fallback behaviours, human-in-the-loop escalation. Result: no integration nightmare from 4 agents built in isolation and expected to just work.
+
+### Q4 — Story D, GenAI entry: "Where else have you used GenAI to make your own delivery practice faster, not just as something you build for a client?"
+
+- I piloted GenAI-assisted risk identification across RAID logs — LLM-based pattern matching scanning risk descriptions across all portfolio programs to surface cross-program dependency conflicts manual review was missing. Quantified: 35% reduction in manual risk review effort, 2× more cross-program conflicts surfaced. it become an institutionalized practice.
+
+## Story C
+
+### Q1 — Dashboard-mechanics entry: "If I asked you to build a single number that tells me whether a program is actually healthy, what would go into it and why?"
+
+- SPI/CPI anchors at 40% because it's the highest-frequency signal a CTO acts on; Pipeline SLA adherence (25%), quality (20%) and team health (15%) utilization + sprint health, get real weight because they're lower-frequency but higher-severity — data quality specifically is what catches the "green by vibes" programs that SPI alone would miss.
+
+### Q2 — Story C, BAU/Transformation entry: "How do you keep transformation work from quietly eating into your team's ability to support what's already live?"
+
+Delivery health dashboard constiture with 40% schedule (CPI/SPI), 25% pipeline SLA, 20% data quality, 15% team health — dual-track visibility across BAU and transformation. Without it, transformation pressure silently erodes BAU SLA adherence. Resource leveling is the underlying technique balancing shared engineers across both tracks.
