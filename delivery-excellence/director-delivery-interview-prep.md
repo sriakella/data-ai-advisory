@@ -61,6 +61,10 @@ I was accountable for the program outcome — governing 3 workstream leads, owni
 
 6. **Commercial Accountability** This program carried direct P&L (Profit & Loss) exposure — I owned the budget-to-actual variance, alongside the schedule. The Phase 2 deferral decision (move 4, above) was as much a margin-protection call as a timeline call: absorbing 2 additional data sources mid-build without a change order would have eroded margin on a fixed-scope commercial arrangement. (comment: Framing the CDO conversation around activation value AND cost impact — not schedule alone — is what makes this a commercial story, not just a delivery story. Use CPI (Cost Performance Index), not just SPI, when asked directly about budget ownership).
 
+7. **Held the profiling gate against a brand's "clean data" claim**. One brand pushed back at the profiling gate, insisting their extract was clean — accepting that would have opened the gate on unverified data. I read the Databricks profiling job output directly — raw null-rate, cardinality, and PII-scan figures, not the summary dashboard — and the numbers didn't support the claim. Held the gate: this is the specific instance behind the "no workstream moves to build without profiling sign-off" rule in Action 1, enforced against a real challenge, not just written as policy.
+
+8. **Verified the match-rate evidence myself before it reached the CDO** The 35% audience match-rate figure was about to go to the CDO without me having traced it to source. I queried the Reltio golden-record table myself — a sample of mismatched customer IDs — to check match-confidence directly. The evidence behind the 35% number was mine to defend, not a handed-up summary; sign-off on the golden-record model itself stayed with the brands and the architecture review board.
+
 **Result:**
 Achieved 35% improvement in audience match rates at launch. All 12 brands onboarded to the unified platform. Delivered within the original timeline envelope despite mid-build scope pressure. The phased scope approach was adopted as a standard practice in the CoE for multi-brand programs.
 
@@ -87,6 +91,10 @@ Deliver all 3 programs concurrently with a 20–40 person cross-functional team,
 4. **Vendor & SOW management:** Managed the tension between the T&M and fixed-price contracts. The fixed-price program was at risk of scope creep; I enforced the change request log rigorously. For the T&M programs, I tracked utilization weekly and flagged to the client when burn rate was ahead of value delivery — building trust that we were managing their investment, not just billing hours.
 
 5. **Capacity planning:** The 3 programs shared analytics engineers. I built a **skills-based resource allocation matrix** and ran **monthly capacity reviews**. When Program 2 needed a Marketo specialist and Program 3 had one under-utilized, I negotiated the reallocation with both sponsors — transparent, data-backed, and documented.
+
+6. **Traced the exact schema change myself, not the summary.** A cross-program breakage occurred despite the shared data contract registry being in place, and the reporting engineer's summary didn't identify which change caused it. I reviewed the diff history myself and found the specific schema change responsible. That confirmation is what let the registry earn its status as a validated control — the mechanism that eliminated the 2–3 cross-program breakages per quarter the programs had been experiencing.
+
+7. **Caught a silent mapping error before it reached live campaigns**. After a Marketo→SFMC handoff, the platform engineers had signed off on segment counts, but I hadn't independently confirmed the numbers reconciled. I pulled a sample extract from the DMP activation layer and checked the segment counts directly. The counts didn't match — caught before the error reached live campaigns. The handoff belonged to the platform engineers; the catch was mine.
 
 **Result:**
 Contributed to 22% improvement in digital conversion rates across the bank's digital channels. Built reusable delivery playbooks for banking and insurance verticals adopted across the Xerago practice. Drove 30%+ practice revenue growth through follow-on engagements — earned through delivery trust, not sales.
@@ -121,6 +129,8 @@ Design and stand up a cross-portfolio delivery health dashboard that standardize
 
 5. **Process improvement feedback loop:** Used the dashboard data to identify systemic patterns in retrospectives. Discovered that every program was underestimating data quality remediation effort by ~30%. Institutionalized a mandatory data profiling sprint in the discovery phase across all future programs — eliminating the #1 cause of mid-build scope surprises.
 
+6. **Diagnosed before escalating, didn't just relay the flag.** When the composite score surfaced a data-quality drop on one program, I reviewed the lineage graph myself to trace which upstream source was actually driving it, rather than forwarding an unexamined flag to the program's engineering lead. Found the specific upstream table. The fix conversation started with "here's the source causing it," not "your score dropped, go find out why" — the diagnosis was mine, the remediation stayed with the data engineering team.
+
 **Result:**
 Cut executive steering meetings from 60 to 20 minutes. Eliminated "what does green mean" ambiguity. The data profiling sprint practice reduced average delivery cycle time by 22% across the portfolio. The dashboard model was adopted as an LTM delivery standard.
 
@@ -128,30 +138,30 @@ Cut executive steering meetings from 60 to 20 minutes. Eliminated "what does gre
 
 ---
 
-### Story D: AI/ML-Enabled Data Platform — Agentic Field Service & Field Service Intelligence Dashboard (LTM)
+### Story D: AI/ML-Enabled Agentic Field Service Optimisation Platform (LTM)
 
 **Competencies:** Portfolio Governance (#1), Capacity Planning (#6), GenAI & AI Agent Program Delivery (#10)
 
 **Situation:**
-LTM was engaged on two related programs: (1) an Agentic Field Service Optimisation (FSO) platform for a leading European CV manufacturer, built on Snowflake Cortex Agents with a 4-layer architecture (Forecasting, Scheduling, Routing, Parts Intelligence); and (2) a **Field Service Intelligence Dashboard** with predictive maintenance scoring for a separate, global automotive OEM, built on snowflake. This dashboard surfaced service requests (from fleet owners and individual customers), parts availability, technician scheduling, and FTFR (First Time Fix Rate) forecast details — embedded into the existing service KPI dashboards used by 200+ field engineers. *(Note: predictive maintenance scoring draws on customer-reported service signals as one input, but the engineer-facing view is operational — requests, parts, schedules, forecasts — not raw customer sentiment.)* Both programs were among the first in our portfolio where AI/ML models were the primary deliverable, not a supporting feature.
+LTM was engaged by a leading European CV (Commercial Vehicle) manufacturer to build an Agentic Field Service Optimisation (FSO) platform — improving after-sales service efficiency across fleet owners (50+ vehicle fleets) and individual customers, who bring vehicles into service centers for breakdowns or scheduled service. The platform was delivered in **two layers**: first, a classical ML-plus-rules **FTFR (First Time Fix Rate) prediction model** — using 3 parameters (parts availability, engineer scheduling capacity, and a predicted completion-probability score) to gate direct engineer assignment above a >70% confidence threshold, with sub-70% cases routed to the floor manager for case prep and customer contact. Once proven, this was evolved into a **4-layer agentic architecture** (Forecasting, Scheduling, Routing, Parts Intelligence) on Snowflake Cortex Agents, delivered as a single dashboard used by 200+ of the manufacturer's own field engineers to view and select cases. This was among the first programs in our portfolio where AI/ML models were the primary deliverable, not a supporting feature.
 
 **Task:**
-Manage delivery of these AI/ML-enabled programs — ensuring that model development didn't run in an ungoverned "research mode," that business value was demonstrable at each gate, and that the team had the right skills for a delivery type our CoE hadn't done at this scale before.
+Manage delivery of this AI/ML-enabled program — ensuring model development didn't run in an ungoverned "research mode," that business value was demonstrable at each gate (starting with the classical model, before the agentic build was approved), and that the team had the right skills for a delivery type our CoE hadn't done at this scale before.
 
 **Action:**
 
-1. **Value-first gate for AI/ML delivery:** Introduced a rule: every model required a documented business decision change before build approval. The data science team couldn't build a churn prediction model just because the data existed — they had to articulate: "This model will change how the dispatcher assigns priority. Here's the current decision process, here's how it changes, here's the expected FTFR improvement." This prevented the "model graveyard" problem — models built but never operationalized.
+1. **Value-first gate for AI/ML delivery, proven in two layers:** Introduced a rule: every model required a documented business decision change before build approval. Applied it sequentially — first proved business value with the classical FTFR model (3 parameters, >70% confidence threshold, floor-manager fallback below it), which alone drove the 15% FTFR improvement. Only once that value was measured and proven did I approve evolving it into the 4-agent Cortex Agents architecture. This prevented the "model graveyard" problem — no build (classical or agentic) proceeded without a documented, expected decision change and measurable outcome behind it.
 
-2. **Capacity planning for AI/ML talent:** Our CoE had strong data engineering bench but thin ML engineering capability. I ran a skills inventory and gap analysis — identified that we had 0 dedicated ML engineers but 2 programs needing model deployment and MLOps. Secured 2 ML engineers through **targeted augmentation**, paired each with a senior data engineer for knowledge transfer. Built a 90-day ramp plan so the augmented talent could operate independently by Sprint 6.
+2. **Capacity planning for AI/ML talent:** Our CoE had strong data engineering bench but thin ML engineering capability. I ran a skills inventory and gap analysis — identified that we had 0 dedicated ML engineers despite growing model deployment and MLOps demand across the portfolio. Secured 2 ML engineers through **targeted augmentation**, paired each with a senior data engineer for knowledge transfer. Built a 90-day ramp plan so the augmented talent could operate independently by Sprint 6.
 
-3. **Stage-gate adaptation for ML programs:** Traditional stage gates (Architecture → Build → UAT) don't fit ML development, where model training is iterative and "done" is a performance threshold, not a feature checklist. Adapted the gates: Discovery → Data Profiling & Feature Engineering → Model Training & Validation (with defined accuracy/F1 thresholds) → Integration & Embedding → UAT → Hypercare. Each gate had ML-specific exit criteria — model performance benchmarks, bias checks, explainability documentation.
+3. **Stage-gate adaptation for ML programs:** Traditional stage gates (Architecture → Build → UAT) don't fit ML development, where model training is iterative and "done" is a performance threshold, not a feature checklist. Adapted the gates: **Discovery → Data Profiling & Feature Engineering → Model Training & Validation (with defined accuracy/F1 thresholds) → Integration & Embedding → UAT → Hypercare**. Each gate had ML-specific exit criteria — model performance benchmarks, bias checks, explainability documentation.
 
 4. **GenAI-augmented delivery practices:** Piloted GenAI-assisted risk identification across RAID logs — used LLM-based pattern matching to scan risk descriptions across all portfolio programs and surface cross-program dependency conflicts that manual review was missing. Reduced manual risk review effort by 35% while surfacing 2× more cross-program dependency conflicts.
 
 5. **Governed the agentic architecture:** The Cortex Agents FSO platform had 4 autonomous agents that needed to coordinate. Worked with the architecture team to define agent interaction contracts, fallback behaviours, and human-in-the-loop escalation triggers. From a delivery standpoint, I treated each agent as a workstream with its own stage-gate — preventing the integration nightmare of 4 agents built independently and expected to "just work" together.
 
 **Result:**
-FSO platform achieved 15% FTFR improvement. Field Service Intelligence Dashboard with predictive maintenance scoring deployed to 200+ field engineers, surfacing service requests, parts availability, scheduling, and FTFR forecasts in their existing workflow. Both programs delivered on schedule. The value-first gate and ML-adapted stage-gate model were adopted as CoE standards for all future AI/ML programs.
+The classical FTFR model achieved 15% FTFR improvement — proven before the agentic build was approved. Scaled into the 4-agent dashboard, now used by 200+ of the manufacturer's own field engineers to view, select, and complete cases on time. Delivered on schedule. The two-layer, value-first approach and the ML-adapted stage-gate model were adopted as CoE standards for all future AI/ML programs.
 
 **100+ Team Leadership callout:** Across the CoE portfolio (15+ engagements, 50–100+ people), I lead through 3 organizational layers, not directly: Senior PMs (direct reports) → Leads (workstream owners, like the 3 workstream leads in Story A) → engineers/analysts/data scientists (executing). Span of control at my layer is 4–6 Senior PMs; each Senior PM carries their own span of Leads. When asked about "managing 100+ people," the accurate framing is: "I lead a matrixed organization through leadership layers — I set direction and remove blockers for Senior PMs, who in turn govern Leads." Never claim flat, direct management of 100 individuals — that overstates span of control and reads as inexperience with organizational design.
 
@@ -309,6 +319,25 @@ Average delivery cycle time: reduced by 22% portfolio-wide
 - Multi-Year Budget Forecast Model
 - Portfolio P&L Risk Dashboard
 
+## Story B
+- Hybrid methodology model
+- Shared Data Contract Registry
+- Standardized Portfolio Health View
+- Change Request Log
+- Utilization Summary
+- Skills-based Capacity Matrix
+- Honest Bridge (Rebadging)
+
+## Story A — Artifacts for recall (names only):
+
+- Stage-Gate Model
+- Dependency Structure Matrix (DSM)
+- Assumption Log
+- SEAM (Stakeholder Engagement Assessment Matrix)
+- Change Request Log
+- Commercial Accountability
+
+
 # Acronyms
 
 - CDC, CPI/SPI, PII, UAT, DSM, SOW, T&M, P&L, SLA, BAG, ML/AI/GenAI, RACI(implicit).
@@ -355,9 +384,9 @@ Average delivery cycle time: reduced by 22% portfolio-wide
 
 ### Q1 — Portfolio Governance entry: "AI/ML initiatives often turn into a pile of models nobody actually uses. How do you make sure that doesn't happen in a program you're governing?"
 
-- Two related programs: (1) FSO (Field Service Optimisation) for a European CV manufacturer — 4-layer agentic architecture on Snowflake Cortex Agents: Forecasting, Scheduling, Routing, Parts Intelligence. (2) A Field Service Intelligence Dashboard with predictive maintenance scoring for a separate global automotive OEM, built on Databricks — surfacing service requests, parts availability, scheduling, and FTFR (First Time Fix Rate) forecasts for 200+ field engineers. Introduced a value-first gate: every model required a documented business decision change before build approval — prevented the "model graveyard" problem. Adapted the stage-gate for ML: Discovery → Data Profiling & Feature Engineering → Model Training & Validation (accuracy/F1 thresholds) → Integration & Embedding → UAT → Hypercare — because "done" for a model is a performance threshold, not a feature checklist. Results: FSO 15% FTFR improvement; dashboard live for 200+ engineers. Both standardized as CoE norms.
+- One program, delivered in two layers, for a European CV manufacturer's FSO (Field Service Optimisation) platform. Layer 1: a classical FTFR (First Time Fix Rate) prediction model — 3 parameters (parts availability, scheduling, completion-probability score), >70% confidence gates direct engineer assignment, sub-70% routes to the floor manager. This alone drove 15% FTFR improvement — proven value before any agentic build. Layer 2: evolved into a 4-layer agentic architecture on Snowflake Cortex Agents — Forecasting, Scheduling, Routing, Parts Intelligence — delivered as a single dashboard for 200+ of the manufacturer's own field engineers. Value-first gate applied to both layers: every model required a documented business decision change before build approval — prevented the "model graveyard" problem. Adapted the stage-gate for ML: Discovery → Data Profiling & Feature Engineering → Model Training & Validation (accuracy/F1 thresholds) → Integration & Embedding → UAT → Hypercare. Standardized as CoE norm.
 
-### Q2 — Capacity entry: "Your team has strong data engineering depth but almost no ML engineering capability, and two programs suddenly need model deployment. What do you do?"
+### Q2 — Capacity entry: "Your team has strong data engineering depth but almost no ML engineering capability, and this program suddenly needs model deployment. What do you do?"
 
 - the skills inventory showed 0 ML engineers to be deployed in the program. I had used targeted augmentation and found 2 ML engineers. Tagged these 2 ML engineers to 2 senior data engineers to ramp up and learn to work independently to deploy the models. BY sprint 6 they are to able to operate and deliver at the desired level. that's how capacity shortcomings had been overcame.
 
@@ -367,7 +396,7 @@ FSO's 4 autonomous agents needed to coordinate. I treated each as its own workst
 
 ### Q4 — Story D, GenAI entry: "Where else have you used GenAI to make your own delivery practice faster, not just as something you build for a client?"
 
-- I piloted GenAI-assisted risk identification across RAID logs — LLM-based pattern matching scanning risk descriptions across all portfolio programs to surface cross-program dependency conflicts manual review was missing. Quantified: 35% reduction in manual risk review effort, 2× more cross-program conflicts surfaced. it become an institutionalized practice.
+- I piloted GenAI-assisted risk identification across RAID logs — LLM-based pattern matching scanning - risk descriptions across all portfolio programs to surface cross-program dependency conflicts manual review was missing. Quantified: 35% reduction in manual risk review effort, 2× more cross-program conflicts surfaced. it become an institutionalized practice.
 
 ## Story C
 
