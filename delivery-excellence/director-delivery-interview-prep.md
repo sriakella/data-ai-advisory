@@ -212,14 +212,19 @@ That's where the five-factor test came from. It wasn't designed in a workshop �
 
 **Competencies:** Client Relationship Management, Escalation & Recovery, Operational Excellence, Stakeholder Communication
 
+<<<<<<< HEAD
 **Parameters delivered:** Escalation-recovery under pressure, Feedback loop closed (client input → CoE standard), Trust rebuilt through transparency (not perfection)
 
 **Layer 1 — Lead (45 seconds):**
+=======
+**Story:**
+>>>>>>> 340830ff0d77e37f9eadce3509a5245fb971b0ec
 
 A mid-sized regional retail chain engaged our consulting practice to modernize their reporting system ahead of a private equity review. The real issue wasn't messy data — finance and products were showing different revenue numbers to investors, and the board needed one number everyone could trust.
 
 Six weeks into a 12-week fixed-scope engagement, a change in their store checkout system quietly broke one of our data jobs. Their finance team spotted it before we did — I triggered our 24-hour escalation path, opened a war room within 48 hours, pulled in our data engineer and their systems admin to rebuild the job, and re-ran every downstream report so nothing going to the board used bad data.
 
+<<<<<<< HEAD
 Result: fourteen straight weeks zero reporting defects, the PE review closed on schedule with no data issues flagged, and the client expanded to two more business units — roughly 40% increase in engagement value.
 
 **Layer 2 — Reserve (when AS asks "what changed after that?"):**
@@ -228,6 +233,11 @@ Their VP of Finance told me afterward: "I need to hear about the fire before I s
 
 **Verbal technique — if AS challenges directly, switch to verdict-first:**
 > "I caught a trust crack early and closed it in 48 hours. The client expanded 40% afterward — not because we were perfect, but because we surfaced our own mistake before they had to escalate."
+=======
+Their VP of Finance told me afterward: "I need to hear about the fire before I smell the smoke." That feedback didn't just change this engagement — it became one of the inputs behind the shared schema registry we later institutionalized across the CoE, so schema-level breaks get caught at the contract boundary, not in someone's report.
+
+**Result:** Fourteen straight weeks zero reporting defects, the PE review closed on schedule with no data issues flagged, and the client expanded to two more business units — roughly 40% increase in engagement value.
+>>>>>>> 340830ff0d77e37f9eadce3509a5245fb971b0ec
 
 **Anticipated pushback — three challenges to prep for:**
 
