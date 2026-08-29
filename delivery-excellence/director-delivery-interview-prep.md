@@ -167,6 +167,78 @@ The classical FTFR model achieved 15% FTFR improvement — proven before the age
 
 ---
 
+### Strategic Leadership: Scope Discipline & Prioritization Mechanism (Prior Engagement)
+
+*(Backup story for the Strategic Leadership competency flagged in Bakish's L1 feedback — not a fifth story competing with A–D.)*
+
+**Competencies:** Strategic Prioritization (new — not yet indexed in Section 2), Stakeholder Management (#5), Capacity Planning & Talent Strategy (#6)
+
+**Parameters delivered:** Repeatable decision frameworks (five-factor test), Adaptive decision under ambiguity (bench vs unknown release dates), Intellectual independence (challenged AVP, integrated, didn't comply — Layer 2)
+
+**Layer 1 — Lead (45 seconds):**
+
+Stakeholders brought four scope items to the table: supply chain, MDM, CX decision engine, and dashboards & reporting. I picked two — CX decision engine and dashboards & reporting — and left supply chain and MDM on the table.
+
+MDM and supply chain resources were committed to other programs with no clear release date. CX decision engine and Power BI talent were on bench — I could staff and start delivering within the sprint. I ran my five-factor test — capacity, priority fit, real capability, competitive context, existing commitments — supply chain and MDM failed on two. Clear, on-the-record no.
+
+Result: 15% throughput gain, team engagement improved — engineers and leads understood why something got a yes or a no.
+
+**Layer 2 — Reserve (when AS asks "how did you get to this framework?"):**
+
+That wasn't always my instinct. I used to accept the entire scope from the account team assuming it would grow revenue — never pushed back on zones we couldn't staff. It kept running into resource crunches and delivery escalations.
+
+An AVP I reported to reframed it: accepting everything isn't growth — delivering what you committed to successfully is what wins the next SOW. I pushed back — if we never accept new scope, we never grow our competence against competition. His counter: fine, but accommodate scope that's *adjacent* to what you're good at — 20–30% of scope items, not 100% — and never at the cost of the strategic engagement.
+
+That's where the five-factor test came from. It wasn't designed in a workshop — it came out of a real disagreement about what growth means.
+
+**Anticipated pushback — six challenges to prep for:**
+
+| # | Challenge | How to answer |
+|---|---|---|
+| 1 | "What happened to supply chain and MDM?" | State the real outcome — deferred, handed off, or dropped |
+| 2 | "20-30% of what?" | "Scope items — out of four, I take one adjacent stretch max alongside the core" |
+| 3 | "What if bench was empty too — no to all four?" | Answer honestly — escalate for external hires, negotiate timelines, or decline the full set |
+| 4 | "15% — how measured?" | Name the metric: velocity, cycle time, or deliverables per sprint |
+| 5 | "Did the client push back on the two you declined?" | Describe the reaction and how you held the line |
+| 6 | "Five factors — which one kills most options?" | "Capacity and existing commitments. The other three rarely fail alone." |
+
+**Do-not-use note:** the real individuals behind this story are not named or identified by reporting-chain detail in the interview — use generic framing ("an AVP I reported to at the time") only.
+
+---
+
+### Customer Engagement — Reserve Illustration: Schema Break Recovery & Client Trust (Retail / PE Context)
+
+*(Backup story for Customer Engagement competency — not a sixth story competing with A–D. Bridges to Story B's shared schema registry as org-level carry-forward.)*
+
+**Competencies:** Client Relationship Management, Escalation & Recovery, Operational Excellence, Stakeholder Communication
+
+**Parameters delivered:** Escalation-recovery under pressure, Feedback loop closed (client input → CoE standard), Trust rebuilt through transparency (not perfection)
+
+**Layer 1 — Lead (45 seconds):**
+
+A mid-sized regional retail chain engaged our consulting practice to modernize their reporting system ahead of a private equity review. The real issue wasn't messy data — finance and products were showing different revenue numbers to investors, and the board needed one number everyone could trust.
+
+Six weeks into a 12-week fixed-scope engagement, a change in their store checkout system quietly broke one of our data jobs. Their finance team spotted it before we did — I triggered our 24-hour escalation path, opened a war room within 48 hours, pulled in our data engineer and their systems admin to rebuild the job, and re-ran every downstream report so nothing going to the board used bad data.
+
+Result: fourteen straight weeks zero reporting defects, the PE review closed on schedule with no data issues flagged, and the client expanded to two more business units — roughly 40% increase in engagement value.
+
+**Layer 2 — Reserve (when AS asks "what changed after that?"):**
+
+Their VP of Finance told me afterward: "I need to hear about the fire before I smell the smoke." That feedback didn't just change this engagement — it became one of the inputs behind the shared schema registry we later institutionalized across the CoE, so schema-level breaks get caught at the contract boundary, not in someone's report.
+
+**Verbal technique — if AS challenges directly, switch to verdict-first:**
+> "I caught a trust crack early and closed it in 48 hours. The client expanded 40% afterward — not because we were perfect, but because we surfaced our own mistake before they had to escalate."
+
+**Anticipated pushback — three challenges to prep for:**
+
+| # | Challenge | How to answer |
+|---|---|---|
+| 1 | "Why didn't your monitoring catch the schema change before finance did?" | Own it directly: "Our alerting only watched for job failures, not upstream schema drift. That's the gap this exposed — and why we built schema-level monitoring into the CoE standard afterward." |
+| 2 | "Fourteen weeks zero defects — how do you know it was zero and not just unreported?" | "We instrumented every published report with a reconciliation check against source totals. Zero meant zero mismatches in the reconciliation log, not zero complaints." |
+| 3 | "40% expansion — was that your relationship or were they just buying more of the same SOW?" | "Different business units, different data sources, new SOW scoped separately. They chose us over re-competing because the PE review went clean — that was the proof point, not the relationship." |
+
+---
+
 ## 3. Pillar 2 — Stakeholder & Client Management: Key Facets for Interview Reference
 
 The following are the 5 core facets from the Stakeholder & Client Management responsibility segment (Section 1.3 of the Director Delivery reference framework). Each story above references at least one.
@@ -240,6 +312,7 @@ The following are the 5 core facets from the Stakeholder & Client Management res
 | "How do you balance BAU and transformation?" | Story C (BAU callout) | Dual-track dashboard, resource leveling across shared engineers |
 | "How large a team have you led?" | Intro + Story D (100+ callout) | 3 leadership layers, 4–6 Senior PM span of control, not flat 100-person management |
 | "How do you drive productivity/cost-out?" | Skills table | $1.2M multi-cloud consolidation, 75–85% utilization discipline, GenAI-assisted risk review |
+| Commercial Ownership | You own P&L visibility — budget-to-actual variance, CPI tracking, SOW structure (T&M vs fixed-price), and the decision to flag margin erosion before finance tells you. |
 
 ---
 
@@ -398,6 +471,12 @@ FSO's 4 autonomous agents needed to coordinate. I treated each as its own workst
 
 - I piloted GenAI-assisted risk identification across RAID logs — LLM-based pattern matching scanning - risk descriptions across all portfolio programs to surface cross-program dependency conflicts manual review was missing. Quantified: 35% reduction in manual risk review effort, 2× more cross-program conflicts surfaced. it become an institutionalized practice.
 
+## Strategic Leadership — Reserve Illustration
+
+### Q1 — Strategic Prioritization entry: "Tell me about a time you had to say no to a stakeholder request, even though you technically could have said yes."
+
+- Stakeholders brought 3–4 scope options in one conversation. My early instinct was to accommodate all of them — an AVP I worked with pushed back: stretching into everything wasn't growth, it was avoiding the harder call. That reframed it. I built a five-factor test before committing to scope — resource capacity, long-term priority fit, real capability, competitive context, existing pipeline — and anything that didn't clear it got a clear no, on the record. Delivery output rose ~15% once we stopped spreading thin, and engagement improved because the team understood exactly why a scope was accepted or declined.
+
 ## Story C
 
 ### Q1 — Dashboard-mechanics entry: "If I asked you to build a single number that tells me whether a program is actually healthy, what would go into it and why?"
@@ -407,3 +486,93 @@ FSO's 4 autonomous agents needed to coordinate. I treated each as its own workst
 ### Q2 — Story C, BAU/Transformation entry: "How do you keep transformation work from quietly eating into your team's ability to support what's already live?"
 
 Delivery health dashboard constiture with 40% schedule (CPI/SPI), 25% pipeline SLA, 20% data quality, 15% team health — dual-track visibility across BAU and transformation. Without it, transformation pressure silently erodes BAU SLA adherence. Resource leveling is the underlying technique balancing shared engineers across both tracks.
+
+
+## Project Management Ontology:
+
+* **Project** 
+* **Activity**  
+* **Event/Node** 
+* **Precedence Relationship** 
+* **Dummy Activity**  
+* **Network Diagram** 
+* **Critical Path**
+* **Float (Slack)** 
+
+## WoW Moments:
+
+1. For "walk me through your AI/ML delivery experience" or "show me a point of view":
+
+We built an AI-driven scheduling platform for a commercial vehicle manufacturer — the goal was predicting whether a repair could be fixed right the first time. Instead of jumping straight to a full agentic AI build, I made the call to prove it cheap first. We built a simple model using three signals — parts availability, engineer capacity, and a completion-confidence score. If the model was over 70% confident, the case went straight to an engineer. Below that, it went to a floor manager to prep it properly. That simple version alone improved first-time-fix rates by 15%. Only after we'd proven that value did I approve scaling it into a full four-agent AI system, now used live by over 200 field engineers. The lesson I apply everywhere: prove the cheap version works before you fund the expensive one.
+
+2. For "tell me about a time you pushed back on technical work":
+
+During a large data platform build, one of our client brands insisted their data was clean and ready to move forward. I don't take that kind of claim at face value — I pulled the actual data quality report myself: how much data was missing, how duplicated it was, whether sensitive customer information was properly flagged. The numbers didn't back up their claim. So I held the gate — we didn't move forward until it was actually fixed. That's the standard I hold across every program: nothing moves to the next stage on someone's word alone, it moves on evidence I've checked myself.
+
+## drive continuous improvement
+
+- Across my programs, every team reported their health a different way — some said red-yellow-green, some said percent done, some just said "we're fine." My leadership couldn't tell what was actually true. And it turned out two programs that were reporting "fine" were actually behind schedule — nobody had said so, because there was no shared way to measure it. That was the real problem: the reports couldn't be trusted. So I built one shared scorecard, using the same numbers the same way for every program, updated live instead of once a week. The two hidden problem programs showed up the moment we switched to it. Meetings that used to take an hour now take twenty minutes, and nobody has to say "trust me" anymore — the numbers speak for themselves
+
+## Low Moments
+
+- **BLIND** blind spot → learned from my AVP → it cost me credibility → built the new scorecard → fixed fast, trust took longer.
+- I was accountable for the health of my whole portfolio. For two and a half quarters, my own reporting couldn't actually tell me which programs were healthy — every team measured it a different way, and two programs were quietly behind schedule that whole time while still showing green. It surfaced during a review with my AVP — he asked a question my own numbers couldn't answer, and that was the moment I realized I'd been reporting a picture I hadn't actually verified myself. That's on me, not just a process gap — I was accountable for knowing, and for two and a half quarters, I didn't. It cost me real credibility — walking in as the person who's supposed to have the answer, and not having it. Once I saw the gap, I built one shared scorecard — same numbers, same math, for every program, updated live instead of once a week. The two hidden programs surfaced within the first week of switching over. The reporting problem was fixed fast. Rebuilding my AVP's confidence in what I told him took longer — a few clean quarters of numbers he didn't have to double-check before that trust came back.
+
+
+## Lakehouse principles
+
+- ACID on open storage - 
+- Decoupled storage & compute
+- Unified workloads
+- Schema enforcement & evolution
+- Openness / interoperability
+
+Principle       |       What I verify as Delivery Director
+--------------------------------------------------------------
+- ACID on open storage  |       Profiling gate exists; data quality metrics (null rates, cardinality, PII) are signed off before build
+- Decoupled storage & compute   |       Compute sizing is a conscious decision with cost implications tracked in CPI, not an afterthought
+- Unified workloads     |       No unnecessary data duplication across workstreams; shared data contracts registered and governed
+- Schema enforcement & evolution        |       Schema drift is tested for; pipeline handles it gracefully or fails explicitly — not silently
+- Openness / interoperability   |       No vendor lock-in decisions made without an ADR; open formats used where the architecture specifies them
+
+
+# Engineering best practices:
+
+- Automated tests, pipeline monitoring, and data-quality alerts must be live before UAT — not added after launch. I track these alongside schedule and cost on the same delivery dashboard.
+
+## ATAM: 
+
+- Business outcome drivers
+- Quality Attributes (utility tree on scenario based - generally a compressed list)
+- SSEARM: Source → Stimulus → Artifact → Environment → Response → Measure. The measure is non-negotiable. Quality attribute scenario
+- Decision - Name the sensitivity and tradeoff points.
+- Sensitivity Points · Tradeoff Points · Risks · Non-Risks. Stop. / ATAM outputs
+
+## Delivery Director instruments governance: 
+- Rework ratio — architecture-driven defects found pre-build;  
+- Decision cycle time — are decisions getting made faster because tradeoffs are surfaced early; 
+- Escalation rate — how often a decision jumps the tier
+
+
+## Stakeholder communication:
+
+- executive communication compresses as seniority rises. A VP gets the dashboard. A CTO gets the narrative. A CEO gets the verdict plus one proof point. The SVP interviewing you will be listening for whether you instinctively calibrate to the audience — that's the real test behind this JD section.
+- the sequence controls the narrative. Credibility first, then the hard news with a recovery plan attached — that's what "communicate risks clearly" means operationally.
+- when the SVP gives you a trust problem, don't reach for a tooling answer. Trust breaks between people; it gets rebuilt between people. Tools only make the evidence visible afterward.
+- executive communication compresses as seniority rises. A VP gets the dashboard. A CTO gets the narrative. A CEO gets the verdict plus one proof point. The SVP interviewing you will be listening for whether you instinctively calibrate to the audience — that's the real test behind this JD section.
+
+
+
+## Strategis Leadership:
+
+- Step 1 — See the destination. Before you lead anyone anywhere, you decide what "winning" actually looks like a few years out. No destination, no strategy.
+
+- Step 2 — Read the surroundings. You look honestly at what's really happening — the market, your team, your resources, your competition — not what you wish were happening.
+
+- Step 3 — Pick the few things that matter. You can't chase everything. Strategy is choosing 3-4 priorities and deliberately saying no to the rest.
+
+- Step 4 — Get people to actually want it. A plan on paper does nothing. Leadership is convincing the team the destination is worth the effort — not just ordering them there.
+
+- Step 5 — Move, watch, adjust. You start executing, but you keep checking if it's working, and change course when reality disagrees with the plan.
+
+### That sequence — destination, honest read, few priorities, buy-in, adjust — is strategic leadership.
