@@ -1,0 +1,152 @@
+# 1. Install dependencies
+!pip install -qU langchain langgraph langchain-google-genai requests
+
+import time
+import requests
+import warnings
+from typing import TypedDict
+from langchain_core.messages import HumanMessage
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langgraph.graph import StateGraph, START, END
+
+# Mute Colab background warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=ResourceWarning)
+
+# 2. Initialize the LLM (Replace with your actual API key)
+llm = ChatGoogleGenerativeAI(
+    model="gemini-2.5-flash",
+    google_api_key="xxxx-xxxx"
+)
+
+# 3. Define the Graph State
+class AgentState(TypedDict):
+    topic: str
+    github_token: str
+    article: str
+    blog: str
+    social: str
+    seo_tags: str
+    final_markdown: str
+    published_url: str
+
+# 4. Define Worker Agents
+
+def agent1_article(state: AgentState):
+    print("Agent 1: Writing L99 Article...")
+    time.sleep(2) # Pacing to avoid rate limits
+    prompt = f"Write a comprehensive, professional 'L99 style' long-form article about: {state['topic']}. Format with markdown headers."
+    response = llm.invoke([HumanMessage(content=prompt)])
+    return {"article": response.content}
+
+def agent2_blog(state: AgentState):
+    print("Agent 2: Writing Blog Post...")
+    time.sleep(2)
+    prompt = f"Write an engaging, conversational blog post about: {state['topic']}. Include a catchy title and an intro hook."
+    response = llm.invoke([HumanMessage(content=prompt)])
+    return {"blog": response.content}
+
+def agent3_social(state: AgentState):
+    print("Agent 3: Writing Social Media Post...")
+    time.sleep(2)
+    prompt = f"Write a punchy, viral social media post about: {state['topic']}. Include trending hashtags and a strong call-to-action."
+    response = llm.invoke([HumanMessage(content=prompt)])
+    return {"social": response.content}
+
+def agent4_seo(state: AgentState):
+    print("Agent 4: Generating SEO & GEO Tags...")
+    time.sleep(2)
+    prompt = (
+        "You are an SEO expert. Generate optimized SEO Meta Titles, Meta Descriptions, "
+        "and GEO tags (targeting a global tech audience, with a focus on US and India) "
+        "for the following three pieces of content separately:\n\n"
+        f"1. ARTICLE:\n{state['article'][:500]}...\n\n"
+        f"2. BLOG:\n{state['blog'][:500]}...\n\n"
+        f"3. SOCIAL:\n{state['social']}"
+    )
+    response = llm.invoke([HumanMessage(content=prompt)])
+    return {"seo_tags": response.content}
+
+def agent5_aggregate_and_publish(state: AgentState):
+    print("Agent 5: Aggregating content and pushing to GitHub...")
+
+    # Compile the final Markdown document
+    final_md = (
+        f"# Content Factory Output: {state['topic']}\n\n"
+        f"## 1. L99 Article\n{state['article']}\n\n---\n"
+        f"## 2. Blog Post\n{state['blog']}\n\n---\n"
+        f"## 3. Social Media Post\n{state['social']}\n\n---\n"
+        f"## 4. SEO & GEO Tags\n{state['seo_tags']}"
+    )
+
+    token = state.get("github_token", "")
+    published_url = "Not Published (No GitHub Token Provided)"
+
+    # Push to GitHub Gists if a token is provided
+    if token and token != "":
+        headers = {
+            "Authorization": f"token {token}",
+            "Accept": "application/vnd.github.v3+json"
+        }
+        filename = f"{state['topic'].replace(' ', '_')}_content.md"
+        data = {
+            "description": f"Automated content generation for {state['topic']}",
+            "public": True,
+            "files": {
+                filename: {"content": final_md}
+            }
+        }
+        try:
+            resp = requests.post("https://api.github.com/gists", headers=headers, json=data)
+            if resp.status_code == 201:
+                published_url = resp.json().get("html_url")
+            else:
+                published_url = f"GitHub API Failed: {resp.text}"
+        except Exception as e:
+            published_url = f"Request Error: {e}"
+
+    return {"final_markdown": final_md, "published_url": published_url}
+
+# 5. Initialize and Compile the Graph
+workflow = StateGraph(AgentState)
+
+workflow.add_node("agent1", agent1_article)
+workflow.add_node("agent2", agent2_blog)
+workflow.add_node("agent3", agent3_social)
+workflow.add_node("agent4", agent4_seo)
+workflow.add_node("agent5", agent5_aggregate_and_publish)
+
+# Wire them sequentially for safe API execution
+workflow.add_edge(START, "agent1")
+workflow.add_edge("agent1", "agent2")
+workflow.add_edge("agent2", "agent3")
+workflow.add_edge("agent3", "agent4")
+workflow.add_edge("agent4", "agent5")
+workflow.add_edge("agent5", END)
+
+app = workflow.compile()
+
+# 6. User Inputs & Execution
+# ---------------------------------------------------------
+USER_TOPIC = "The Future of Quantum Computing in Financial Markets"
+
+# To publish to GitHub, generate a Classic Personal Access Token with 'gist' scope
+# at https://github.com/settings/tokens and paste it here.
+GITHUB_PAT = "xxxxxxxxxxx"
+# ------------------------Replace with PAT---------------------------------
+
+print(f"Starting Content Factory for: '{USER_TOPIC}'...\n")
+final_state = app.invoke({
+    "topic": USER_TOPIC,
+    "github_token": GITHUB_PAT,
+    "article": "", "blog": "", "social": "", "seo_tags": "",
+    "final_markdown": "", "published_url": ""
+})
+
+print("\n" + "="*60)
+print(f"✅ WORKFLOW COMPLETE")
+print(f"🔗 GitHub Gist URL: {final_state['published_url']}")
+print("="*60 + "\n")
+
+# Preview the aggregated result
+print(final_state["final_markdown"])
